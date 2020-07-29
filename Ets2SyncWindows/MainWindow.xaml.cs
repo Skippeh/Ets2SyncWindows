@@ -39,6 +39,9 @@ namespace Ets2SyncWindows
 
         public async Task SyncJobs()
         {
+            if (AppState.SyncingJobs)
+                return;
+            
             AppState.SyncingJobs = true;
             await Task.Delay(1000);
             AppState.SyncingJobs = false;
