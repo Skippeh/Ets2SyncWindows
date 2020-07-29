@@ -1,0 +1,87 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <UseWPF>true</UseWPF>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Page Update="Controls\AlertMessage.xaml">
+        <Generator></Generator>
+      </Page>
+      <Page Update="Controls\Card.xaml">
+        <Generator></Generator>
+      </Page>
+      <Page Update="Controls\GameSelector.xaml">
+        <Generator></Generator>
+      </Page>
+      <Page Update="Controls\DlcSelector.xaml">
+        <Generator></Generator>
+      </Page>
+      <Page Update="Controls\SaveSelector.xaml">
+        <Generator></Generator>
+      </Page>
+      <Page Update="Controls\DlcSelectorContainer.xaml">
+        <Generator></Generator>
+      </Page>
+      <Page Update="Controls\ContentContainer.xaml">
+        <Generator></Generator>
+      </Page>
+      <Page Update="Controls\SyncJobsContainer.xaml">
+        <Generator></Generator>
+      </Page>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Controls\AlertMessage.xaml.cs">
+        <DependentUpon>AlertMessage.xaml</DependentUpon>
+      </Compile>
+      <Compile Update="Controls\Card.xaml.cs">
+        <DependentUpon>Card.xaml</DependentUpon>
+      </Compile>
+      <Compile Update="Controls\GameSelector.xaml.cs">
+        <DependentUpon>GameSelector.xaml</DependentUpon>
+      </Compile>
+      <Compile Update="Controls\DlcSelector.xaml.cs">
+        <DependentUpon>DlcSelector.xaml</DependentUpon>
+      </Compile>
+      <Compile Update="Controls\SaveSelector.xaml.cs">
+        <DependentUpon>SaveSelector.xaml</DependentUpon>
+      </Compile>
+      <Compile Update="Controls\DlcSelectorContainer.xaml.cs">
+        <DependentUpon>DlcSelectorContainer.xaml</DependentUpon>
+      </Compile>
+      <Compile Update="Controls\ContentContainer.xaml.cs">
+        <DependentUpon>ContentContainer.xaml</DependentUpon>
+      </Compile>
+      <Compile Update="Controls\SyncJobsContainer.xaml.cs">
+        <DependentUpon>SyncJobsContainer.xaml</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Fonts\OpenSans-Regular.ttf" />
+      <Resource Include="Fonts\OpenSans-Regular.ttf" />
+      <None Remove="Fonts\OpenSans-Bold.ttf" />
+      <Resource Include="Fonts\OpenSans-Bold.ttf" />
+      <None Remove="Fonts\OpenSans-BoldItalic.ttf" />
+      <Resource Include="Fonts\OpenSans-BoldItalic.ttf" />
+      <None Remove="Fonts\OpenSans-Italic.ttf" />
+      <Resource Include="Fonts\OpenSans-Italic.ttf" />
+      <None Remove="Fonts\OpenSans-Light.ttf" />
+      <Resource Include="Fonts\OpenSans-Light.ttf" />
+      <None Remove="Fonts\OpenSans-LightItalic.ttf" />
+      <Resource Include="Fonts\OpenSans-LightItalic.ttf" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\PrismLibrary\PrismLibrary.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="MomentSharp" Version="1.0.6149.39352" />
+      <PackageReference Include="Pfim" Version="0.9.1" />
+    </ItemGroup>
+
+</Project>

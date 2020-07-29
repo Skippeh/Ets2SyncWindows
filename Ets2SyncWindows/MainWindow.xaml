@@ -1,0 +1,72 @@
+﻿<Window x:Class="Ets2SyncWindows.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="clr-namespace:Ets2SyncWindows.Controls"
+        xmlns:root="clr-namespace:Ets2SyncWindows"
+        mc:Ignorable="d"
+        Title="ATS/ETS2 Job Sync"
+        Width="700" Height="750"
+        MaxWidth="700"
+        MinWidth="700"
+        FontFamily="{StaticResource OpenSans}"
+        WindowStartupLocation="CenterScreen"
+        Loaded="MainWindow_OnLoaded"
+        d:DataContext="{Binding AppState, RelativeSource={RelativeSource Self}}"
+        KeyDown="OnKeyDown"
+>
+    <Window.Resources>
+        <root:ConvertBooleanToGameConfigAlertType x:Key="ConvertBooleanToGameConfigAlertType" />
+    </Window.Resources>
+    <ScrollViewer
+        VerticalScrollBarVisibility="Auto"
+    >
+        <Border Padding="20">
+            <StackPanel>
+                <controls:AlertMessage
+                    Type="{Binding GameConfigIsOk, Converter={StaticResource ConvertBooleanToGameConfigAlertType}, Mode=OneWay}"
+                >
+                    <TextBlock Visibility="{Binding GameConfigIsOk, Converter={StaticResource BooleanToVisibility}}">
+                        Game config is OK.
+                    </TextBlock>
+                    <StackPanel>
+                        <StackPanel.Visibility>
+                            <MultiBinding Converter="{StaticResource MultiBooleanToVisibility}">
+                                <Binding Path="GameConfigIsOk" Converter="{StaticResource InvertBoolean}" />
+                                <Binding Path="GameConfigExists" />
+                            </MultiBinding>
+                        </StackPanel.Visibility>
+                        <TextBlock FontSize="14px" Margin="0 0 0 10" Foreground="{StaticResource MutedCardForegroundColor}">You need to set the following properties in your game config</TextBlock>
+                        <TextBlock VerticalAlignment="Center" Style="{StaticResource CodeTextBlock}">
+                            uset g_console "1"<LineBreak />
+                            uset g_developer "1"<LineBreak />
+                            uset g_save_format "2"
+                        </TextBlock>
+                        <Button Margin="0 15 0 0" Style="{StaticResource SuccessButton}" Click="OnFixConfigClicked" HorizontalAlignment="Left">Fix for me</Button>
+                    </StackPanel>
+                    <WrapPanel Visibility="{Binding GameConfigExists, Converter={StaticResource InvertBooleanToVisibility}}">
+                        <TextBlock VerticalAlignment="Center">
+                            <TextBlock.Text>
+                                You need to launch the game for the first time before being able to sync jobs.
+                            </TextBlock.Text>
+                        </TextBlock>
+                        <Button Margin="5 0 0 0" Style="{StaticResource PrimaryButton}" Click="OnRefreshGameConfigClicked" ToolTip="Click this after you've launched the game.">Refresh</Button>
+                    </WrapPanel>
+                </controls:AlertMessage>
+                <controls:Card HeaderText="Select Game" IsEnabled="{Binding ShouldUiBeEnabled}">
+                    <controls:GameSelector SelectedGame="{Binding SelectedGame}" />
+                </controls:Card>
+                <controls:Card HeaderText="Select DLCs" IsEnabled="{Binding ShouldUiBeEnabled}">
+                    <controls:DlcSelectorContainer />
+                </controls:Card>
+                <controls:Card HeaderText="Select Save" IsEnabled="{Binding ShouldUiBeEnabled}">
+                    <controls:SaveSelector />
+                </controls:Card>
+                <controls:Card HeaderText="Sync Jobs" Margin="0" IsEnabled="{Binding ShouldUiBeEnabled}">
+                    <controls:SyncJobsContainer />
+                </controls:Card>
+            </StackPanel>
+        </Border>
+    </ScrollViewer>
+</Window>

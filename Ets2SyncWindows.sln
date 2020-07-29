@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ets2SyncWindows", "Ets2SyncWindows\Ets2SyncWindows.csproj", "{CEDE57D9-C133-4D29-9664-DBAC6FFB90D1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrismLibrary", "PrismLibrary\PrismLibrary.csproj", "{DB480474-5D9B-461E-AD24-F20F817B3B2D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CEDE57D9-C133-4D29-9664-DBAC6FFB90D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CEDE57D9-C133-4D29-9664-DBAC6FFB90D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CEDE57D9-C133-4D29-9664-DBAC6FFB90D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CEDE57D9-C133-4D29-9664-DBAC6FFB90D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB480474-5D9B-461E-AD24-F20F817B3B2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB480474-5D9B-461E-AD24-F20F817B3B2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB480474-5D9B-461E-AD24-F20F817B3B2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB480474-5D9B-461E-AD24-F20F817B3B2D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

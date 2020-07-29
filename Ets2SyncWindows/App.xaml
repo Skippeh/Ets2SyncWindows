@@ -1,0 +1,82 @@
+﻿<Application x:Class="Ets2SyncWindows.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:Ets2SyncWindows"
+             xmlns:system="clr-namespace:System;assembly=System.Runtime"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <FontFamily x:Key="OpenSans">pack://application:,,,Fonts/#Open Sans</FontFamily>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibility" />
+        <local:ValueConverterGroup x:Key="InvertBooleanToVisibility">
+            <local:InvertBooleanConverter />
+            <BooleanToVisibilityConverter />
+        </local:ValueConverterGroup>
+        <local:MultiBooleanToVisibility x:Key="MultiBooleanToVisibility" />
+        <local:NotNullToVisibility x:Key="NotNullToVisibility" />
+        <local:InvertBooleanConverter x:Key="InvertBoolean" />
+        <local:DateToTimeAgoConverter x:Key="DateToTimeAgoConverter" />
+        <SolidColorBrush x:Key="FaintBorderBrush" Color="Black" Opacity="0.1" />
+        <SolidColorBrush x:Key="MutedForegroundColor">#6c757d</SolidColorBrush>
+        <SolidColorBrush x:Key="MutedCardForegroundColor">#404850</SolidColorBrush>
+        <SolidColorBrush x:Key="PressedButtonBorderBrush" Color="Black" Opacity="0.3" />
+        <SolidColorBrush x:Key="ContentBackgroundBrush">#FAFAFA</SolidColorBrush>
+        <Style x:Key="BaseButton" TargetType="Button">
+            <Setter Property="Padding" Value="8px" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Border" CornerRadius="2" Background="{TemplateBinding Background}" BorderThickness="1px" BorderBrush="{StaticResource FaintBorderBrush}">
+                            <ContentPresenter x:Name="ContentPresenter"
+                                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                                              Content="{TemplateBinding Content}"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              Margin="{TemplateBinding Padding}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                            />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" TargetName="Border" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(local:Theming.ButtonHoverBackground)}" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" TargetName="Border" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(local:Theming.ButtonPressedBackground)}" />
+                                <Setter Property="BorderBrush" TargetName="Border" Value="{StaticResource PressedButtonBorderBrush}" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Background" TargetName="Border" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(local:Theming.ButtonDisabledBackground)}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="SuccessButton" TargetType="Button" BasedOn="{StaticResource BaseButton}">
+            <Setter Property="Background" Value="#28a745" />
+            <Setter Property="local:Theming.ButtonHoverBackground" Value="#218838" />
+            <Setter Property="local:Theming.ButtonPressedBackground" Value="#1e7e34" />
+            <Setter Property="local:Theming.ButtonDisabledBackground" Value="#74c687" />
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+        <Style x:Key="PrimaryButton" TargetType="Button" BasedOn="{StaticResource BaseButton}">
+            <Setter Property="Background" Value="#0062cc" />
+            <Setter Property="local:Theming.ButtonHoverBackground" Value="#0069d9" />
+            <Setter Property="local:Theming.ButtonPressedBackground" Value="#0062cc" />
+            <Setter Property="local:Theming.ButtonDisabledBackground" Value="#5aaaff" />
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+        <Style x:Key="CodeTextBlock" TargetType="TextBlock">
+            <Style.Resources>
+                <SolidColorBrush x:Key="BackgroundBrush" Color="Black" Opacity="0.075" />
+            </Style.Resources>
+            <Setter Property="FontFamily" Value="Consolas" />
+            <Setter Property="Padding" Value="20px" />
+            <Setter Property="Background" Value="{StaticResource BackgroundBrush}" />
+        </Style>
+        <Style x:Key="SubHeader" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14px" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Margin" Value="0 0 0 10" />
+            <Setter Property="Foreground" Value="{StaticResource MutedForegroundColor}" />
+        </Style>
+    </Application.Resources>
+</Application>

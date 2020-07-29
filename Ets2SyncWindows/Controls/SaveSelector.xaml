@@ -1,0 +1,49 @@
+<UserControl x:Class="Ets2SyncWindows.Controls.SaveSelector"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:ets2SyncWindows="clr-namespace:Ets2SyncWindows"
+             xmlns:controls="clr-namespace:Ets2SyncWindows.Controls"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300"
+             d:DataContext="{d:DesignInstance Type=ets2SyncWindows:AppState, IsDesignTimeCreatable=False}">
+    <StackPanel>
+        <controls:ContentContainer>
+            <TextBlock Style="{StaticResource SubHeader}">Select Profile</TextBlock>
+            <ComboBox
+                ItemsSource="{Binding GameProfiles}"
+                DisplayMemberPath="Name"
+                SelectedItem="{Binding SelectedProfile}"
+            >
+                <ComboBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel />
+                    </ItemsPanelTemplate>
+                </ComboBox.ItemsPanel>
+            </ComboBox>
+        </controls:ContentContainer>
+        <controls:ContentContainer Margin="0 20 0 0">
+            <TextBlock Style="{StaticResource SubHeader}">Select Save</TextBlock>
+            <ComboBox 
+                ItemsSource="{Binding SelectedProfile.Saves}"
+                SelectedItem="{Binding SelectedSave}"
+            >
+                <ComboBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel />
+                    </ItemsPanelTemplate>
+                </ComboBox.ItemsPanel>
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock>
+                            <Run Text="{Binding Name}" />
+                            <Run Text=" - " />
+                            <Run Text="{Binding SaveTime, Converter={StaticResource DateToTimeAgoConverter}}" />
+                        </TextBlock>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </controls:ContentContainer>
+    </StackPanel>
+</UserControl>
