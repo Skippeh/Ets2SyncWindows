@@ -88,7 +88,7 @@ namespace PrismLibrary
                 var result = new GameSave
                 {
                     FilePath = gameFilePath,
-                    ThumbnailPath = thumbnailFilePath
+                    ThumbnailPath = File.Exists(thumbnailFilePath) ? thumbnailFilePath : null
                 };
 
                 foreach (var kv in PrismUtility.ParseSiiTextFile(bytesAsString))
