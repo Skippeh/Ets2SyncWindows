@@ -58,7 +58,7 @@
             <Setter Property="Foreground" Value="White" />
         </Style>
         <Style x:Key="PrimaryButton" TargetType="Button" BasedOn="{StaticResource BaseButton}">
-            <Setter Property="Background" Value="#0062cc" />
+            <Setter Property="Background" Value="#007bff" />
             <Setter Property="local:Theming.ButtonHoverBackground" Value="#0069d9" />
             <Setter Property="local:Theming.ButtonPressedBackground" Value="#0062cc" />
             <Setter Property="local:Theming.ButtonDisabledBackground" Value="#5aaaff" />
