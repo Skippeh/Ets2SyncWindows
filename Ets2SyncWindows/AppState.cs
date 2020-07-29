@@ -26,6 +26,7 @@ namespace Ets2SyncWindows
         private GameSave selectedSave;
         private ImageSource thumbnailImage;
         private bool syncingJobs;
+        private bool backupSavesBeforeSyncing;
         
         private FileSystemWatcher configFileWatcher;
 
@@ -128,6 +129,16 @@ namespace Ets2SyncWindows
                 syncingJobs = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(ShouldUiBeEnabled));
+            }
+        }
+
+        public bool BackupSavesBeforeSyncing
+        {
+            get => backupSavesBeforeSyncing;
+            set
+            {
+                backupSavesBeforeSyncing = value;
+                OnPropertyChanged();
             }
         }
 
