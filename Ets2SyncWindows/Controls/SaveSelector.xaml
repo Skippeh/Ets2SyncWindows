@@ -9,7 +9,7 @@
              d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance Type=ets2SyncWindows:AppState, IsDesignTimeCreatable=False}">
     <StackPanel>
-        <controls:ContentContainer>
+        <StackPanel>
             <TextBlock Style="{StaticResource SubHeader}">Select Profile</TextBlock>
             <ComboBox
                 ItemsSource="{Binding GameProfiles}"
@@ -22,8 +22,8 @@
                     </ItemsPanelTemplate>
                 </ComboBox.ItemsPanel>
             </ComboBox>
-        </controls:ContentContainer>
-        <controls:ContentContainer Margin="0 20 0 0">
+        </StackPanel>
+        <StackPanel Margin="0 20 0 0">
             <TextBlock Style="{StaticResource SubHeader}">Select Save</TextBlock>
             <ComboBox 
                 ItemsSource="{Binding SelectedProfile.Saves}"
@@ -44,6 +44,6 @@
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
-        </controls:ContentContainer>
+        </StackPanel>
     </StackPanel>
 </UserControl>
