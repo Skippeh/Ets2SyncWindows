@@ -45,7 +45,7 @@
             </Border>
         </StackPanel>
         <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Margin="0 20 0 0">
-            <Button Style="{StaticResource SuccessButton}" Click="OnSyncJobsClicked">Sync jobs (F5)</Button>
+            <Button Style="{StaticResource PrimaryButton}" Click="OnSyncJobsClicked">Sync jobs (F5)</Button>
         </StackPanel>
     </Grid>
 </UserControl>
