@@ -25,11 +25,7 @@ namespace PrismLibrary
             var tsiiHeader = TSIIHeader.DeserializeFromStream(stream);
 
             if (tsiiHeader.Signature == "SiiN") // File is not encrypted
-            {
-                byte[] bytes = new byte[stream.Length - TSIIHeader.SizeOf];
-                stream.Read(bytes);
-                return bytes;
-            }
+                throw new SiiFormatException(SiiFormatException.ParseError.NotEncrypted);
             
             if (tsiiHeader.Signature != "ScsC") // ScsC is the only valid alternative.
                 throw new SiiFormatException(SiiFormatException.ParseError.InvalidSignature);
