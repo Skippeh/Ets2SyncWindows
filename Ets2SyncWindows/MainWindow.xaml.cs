@@ -26,13 +26,19 @@ namespace Ets2SyncWindows
     {
         public AppState AppState { get; private set; }
 
+        private readonly PersistentAppState loadedAppState;
+
+        private const string ConfigFilePath = "config.json";
+
         public MainWindow()
         {
             InitializeComponent();
-            AppState = new AppState
-            {
-                SelectedGame = GameData.Games.OrderBy(g => g.UiSortOrder).First(),
-            };
+
+            loadedAppState = PersistentAppState.LoadOrCreateDefault(ConfigFilePath);
+            AppState = new AppState();
+            loadedAppState.ApplyTo(AppState);
+            loadedAppState.ReadFrom(AppState);
+            loadedAppState.Save(ConfigFilePath);
 
             DataContext = AppState;
         }
@@ -41,7 +47,9 @@ namespace Ets2SyncWindows
         {
             if (AppState.SyncingJobs)
                 return;
-            
+
+            loadedAppState.ReadFrom(AppState);
+            loadedAppState.Save(ConfigFilePath);
             AppState.SyncingJobs = true;
             await Task.Delay(1000);
             AppState.SyncingJobs = false;
@@ -53,11 +61,6 @@ namespace Ets2SyncWindows
             {
                 await SyncJobs();
             }
-        }
-
-        private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            
         }
 
         private void OnFixConfigClicked(object sender, RoutedEventArgs args)

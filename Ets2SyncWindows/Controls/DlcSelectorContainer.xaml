@@ -16,8 +16,32 @@
             <ColumnDefinition Width="1*" />
             <ColumnDefinition Width="1*" />
         </Grid.ColumnDefinitions>
-        <local:DlcSelector Grid.Column="0" Title="Map expansions" DlcCollection="{Binding SelectedDlcs.MapDlcs}" />
-        <local:DlcSelector Grid.Column="1" Title="Cargo packs" DlcCollection="{Binding SelectedDlcs.CargoDlcs}" />
-        <local:DlcSelector Grid.Column="2" Title="Trailer packs" DlcCollection="{Binding SelectedDlcs.TrailerDlcs}" />
+        <local:DlcSelector Grid.Column="0" Title="Map expansions">
+            <local:DlcSelector.DlcCollection>
+                <MultiBinding Converter="{StaticResource DictionaryItemConverter}">
+                    <Binding Path="SelectedDlcs" />
+                    <Binding Path="SelectedGame" />
+                    <Binding Source="MapDlcs" />
+                </MultiBinding>
+            </local:DlcSelector.DlcCollection>
+        </local:DlcSelector>
+        <local:DlcSelector Grid.Column="1" Title="Cargo packs">
+            <local:DlcSelector.DlcCollection>
+                <MultiBinding Converter="{StaticResource DictionaryItemConverter}">
+                    <Binding Path="SelectedDlcs" />
+                    <Binding Path="SelectedGame" />
+                    <Binding Source="CargoDlcs" />
+                </MultiBinding>
+            </local:DlcSelector.DlcCollection>
+        </local:DlcSelector>
+        <local:DlcSelector Grid.Column="2" Title="Trailer packs">
+            <local:DlcSelector.DlcCollection>
+                <MultiBinding Converter="{StaticResource DictionaryItemConverter}">
+                    <Binding Path="SelectedDlcs" />
+                    <Binding Path="SelectedGame" />
+                    <Binding Source="TrailerDlcs" />
+                </MultiBinding>
+            </local:DlcSelector.DlcCollection>
+        </local:DlcSelector>
     </Grid>
 </UserControl>

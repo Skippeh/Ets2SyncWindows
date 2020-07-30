@@ -15,6 +15,7 @@
         <local:NotNullToVisibility x:Key="NotNullToVisibility" />
         <local:InvertBooleanConverter x:Key="InvertBoolean" />
         <local:DateToTimeAgoConverter x:Key="DateToTimeAgoConverter" />
+        <local:DictionaryItemConverter x:Key="DictionaryItemConverter" />
         <SolidColorBrush x:Key="FaintBorderBrush" Color="Black" Opacity="0.1" />
         <SolidColorBrush x:Key="MutedForegroundColor">#6c757d</SolidColorBrush>
         <SolidColorBrush x:Key="MutedCardForegroundColor">#404850</SolidColorBrush>

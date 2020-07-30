@@ -13,7 +13,6 @@
         MinWidth="700"
         FontFamily="{StaticResource OpenSans}"
         WindowStartupLocation="CenterScreen"
-        Loaded="MainWindow_OnLoaded"
         d:DataContext="{Binding AppState, RelativeSource={RelativeSource Self}}"
         KeyDown="OnKeyDown"
 >

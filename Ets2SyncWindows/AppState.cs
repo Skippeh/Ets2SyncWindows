@@ -17,8 +17,8 @@ namespace Ets2SyncWindows
 {
     public class AppState : INotifyPropertyChanged
     {
-        private Game selectedGame;
-        private GameDlcs selectedDlcs;
+        private Game selectedGame = GameData.Games.OrderBy(g => g.UiSortOrder).First();
+        private Dictionary<Game, GameDlcs> selectedDlcs = new Dictionary<Game, GameDlcs>();
         private PrismConfig gameConfig;
         private ObservableCollection<GameProfile> gameProfiles = new ObservableCollection<GameProfile>();
         private bool loadingGameProfiles = true;
@@ -60,14 +60,13 @@ namespace Ets2SyncWindows
             {
                 selectedGame = value;
                 OnPropertyChanged();
-                SelectedDlcs = new GameDlcs(selectedGame);
                 var (_, loadedConfig) = PrismConfigManager.LoadGameConfig(value.Type);
                 GameConfig = loadedConfig;
                 Task.Run(ReloadGameProfiles);
             }
         }
 
-        public GameDlcs SelectedDlcs
+        public Dictionary<Game, GameDlcs> SelectedDlcs
         {
             get => selectedDlcs;
             set
@@ -117,7 +116,6 @@ namespace Ets2SyncWindows
             {
                 loadingGameProfiles = value;
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(ShouldUiBeEnabled));
             }
         }
 
@@ -146,7 +144,15 @@ namespace Ets2SyncWindows
 
         public bool GameConfigExists => GameConfig != null;
 
-        public bool ShouldUiBeEnabled => !SyncingJobs && !LoadingGameProfiles;
+        public bool ShouldUiBeEnabled => !SyncingJobs;
+
+        public AppState()
+        {
+            foreach (Game game in GameData.Games)
+            {
+                SelectedDlcs.Add(game, new GameDlcs(game));
+            }
+        }
         
         private void InitializeConfigFileWatcher()
         {
