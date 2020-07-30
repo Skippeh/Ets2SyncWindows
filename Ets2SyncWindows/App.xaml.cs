@@ -13,5 +13,10 @@ namespace Ets2SyncWindows
     /// </summary>
     public partial class App : Application
     {
+        private void OnComboBoxRequestBringIntoView(object sender, RequestBringIntoViewEventArgs args)
+        {
+            // Prevents changing selected item when you use the scroll wheel
+            args.Handled = true;
+        }
     }
 }

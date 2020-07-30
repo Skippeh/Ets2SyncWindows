@@ -100,5 +100,8 @@
             <Setter Property="Margin" Value="0 0 0 10" />
             <Setter Property="Foreground" Value="{StaticResource MutedForegroundColor}" />
         </Style>
+        <Style TargetType="ComboBox">
+            <EventSetter Event="RequestBringIntoView" Handler="OnComboBoxRequestBringIntoView" />
+        </Style>
     </Application.Resources>
 </Application>
