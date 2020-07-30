@@ -19,9 +19,7 @@
 >
     <Window.Resources>
         <root:ConvertBooleanToGameConfigAlertType x:Key="ConvertBooleanToGameConfigAlertType" />
-        <LinearGradientBrush x:Key="BottomBorder" StartPoint="0, 0" EndPoint="1, 0">
-            <GradientStop Color="#44000000" Offset="0" />
-        </LinearGradientBrush>
+        <SolidColorBrush x:Key="BottomBorder" Color="#44000000" />
     </Window.Resources>
     <DockPanel>
         <root:MenuBar />
