@@ -11,6 +11,7 @@
         Width="700" Height="750"
         MaxWidth="700"
         MinWidth="700"
+        MinHeight="200"
         FontFamily="{StaticResource OpenSans}"
         WindowStartupLocation="CenterScreen"
         d:DataContext="{Binding AppState, RelativeSource={RelativeSource Self}}"
