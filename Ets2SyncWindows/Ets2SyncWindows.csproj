@@ -79,6 +79,12 @@
       <Resource Include="Fonts\OpenSans-Light.ttf" />
       <None Remove="Fonts\OpenSans-LightItalic.ttf" />
       <Resource Include="Fonts\OpenSans-LightItalic.ttf" />
+      <None Remove="Fonts\Font Awesome 5 Brands-Regular-400.otf" />
+      <Resource Include="Fonts\Font Awesome 5 Brands-Regular-400.otf" />
+      <None Remove="Fonts\Font Awesome 5 Free-Regular-400.otf" />
+      <Resource Include="Fonts\Font Awesome 5 Free-Regular-400.otf" />
+      <None Remove="Fonts\Font Awesome 5 Free-Solid-900.otf" />
+      <Resource Include="Fonts\Font Awesome 5 Free-Solid-900.otf" />
     </ItemGroup>
 
     <ItemGroup>

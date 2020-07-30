@@ -19,6 +19,20 @@ namespace Ets2SyncWindows.Controls
             typeof(Card)
         );
 
+        public static readonly DependencyProperty ExpandedProperty = DependencyProperty.Register(
+            nameof(Expanded),
+            typeof(bool),
+            typeof(Card),
+            new UIPropertyMetadata(true)
+        );
+
+        public static readonly DependencyProperty CanToggleExpansionProperty = DependencyProperty.Register(
+            nameof(CanToggleExpansion),
+            typeof(bool),
+            typeof(Card),
+            new UIPropertyMetadata(true)
+        );
+
         public UIElementCollection CardChildren
         {
             get => (UIElementCollection) GetValue(CardChildrenProperty);
@@ -31,10 +45,30 @@ namespace Ets2SyncWindows.Controls
             set => SetValue(HeaderTextProperty, value);
         }
 
+        public bool Expanded
+        {
+            get => (bool) GetValue(ExpandedProperty);
+            set => SetValue(ExpandedProperty, value);
+        }
+
+        public bool CanToggleExpansion
+        {
+            get => (bool) GetValue(CanToggleExpansionProperty);
+            set => SetValue(CanToggleExpansionProperty, value);
+        }
+
         public Card()
         {
             InitializeComponent();
             CardChildren = ContentPanel.ContentContainerChildren;
+        }
+
+        private void ToggleExpanded(object sender, RoutedEventArgs e)
+        {
+            if (!CanToggleExpansion)
+                return;
+            
+            Expanded = !Expanded;
         }
     }
 }
