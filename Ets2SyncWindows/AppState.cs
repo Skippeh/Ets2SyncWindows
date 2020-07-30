@@ -18,7 +18,7 @@ namespace Ets2SyncWindows
 {
     public class AppState : INotifyPropertyChanged
     {
-        private Game selectedGame = GameData.Games.OrderBy(g => g.UiSortOrder).First();
+        private Game selectedGame;
         private Dictionary<Game, GameDlcs> selectedDlcs = new Dictionary<Game, GameDlcs>();
         private PrismConfig gameConfig;
         private ObservableCollection<GameProfile> gameProfiles = new ObservableCollection<GameProfile>();
@@ -29,6 +29,9 @@ namespace Ets2SyncWindows
         private bool syncingJobs;
         private bool backupSavesBeforeSyncing;
         private bool automaticallySyncSaves;
+        private bool selectSaveCardExpanded;
+        private bool selectDlcCardExpanded;
+        private bool selectGameCardExpanded;
         
         private FileSystemWatcher configFileWatcher;
 
@@ -168,6 +171,36 @@ namespace Ets2SyncWindows
         public bool GameConfigExists => GameConfig != null;
 
         public bool ShouldUiBeEnabled => !SyncingJobs;
+
+        public bool SelectGameCardExpanded
+        {
+            get => selectGameCardExpanded;
+            set
+            {
+                selectGameCardExpanded = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool SelectDlcCardExpanded
+        {
+            get => selectDlcCardExpanded;
+            set
+            {
+                selectDlcCardExpanded = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool SelectSaveCardExpanded
+        {
+            get => selectSaveCardExpanded;
+            set
+            {
+                selectSaveCardExpanded = value;
+                OnPropertyChanged();
+            }
+        }
 
         private readonly MainWindow mainWindow;
 

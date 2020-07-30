@@ -65,13 +65,13 @@
                                 <Button Margin="5 0 0 0" Style="{StaticResource PrimaryButton}" Click="OnRefreshGameConfigClicked" ToolTip="Click this after you've launched the game.">Refresh</Button>
                             </WrapPanel>
                         </controls:AlertMessage>
-                        <controls:Card HeaderText="Select Game" IsEnabled="{Binding ShouldUiBeEnabled}">
+                        <controls:Card HeaderText="Select Game" IsEnabled="{Binding ShouldUiBeEnabled}" Expanded="{Binding SelectGameCardExpanded}">
                             <controls:GameSelector SelectedGame="{Binding SelectedGame}" />
                         </controls:Card>
-                        <controls:Card HeaderText="Select DLCs" IsEnabled="{Binding ShouldUiBeEnabled}">
+                        <controls:Card HeaderText="Select DLCs" IsEnabled="{Binding ShouldUiBeEnabled}" Expanded="{Binding SelectDlcCardExpanded}">
                             <controls:DlcSelectorContainer />
                         </controls:Card>
-                        <controls:Card HeaderText="Select Save" IsEnabled="{Binding ShouldUiBeEnabled}">
+                        <controls:Card HeaderText="Select Save" IsEnabled="{Binding ShouldUiBeEnabled}" Expanded="{Binding SelectSaveCardExpanded}">
                             <controls:SaveSelector />
                         </controls:Card>
                     </StackPanel>

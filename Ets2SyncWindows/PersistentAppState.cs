@@ -17,6 +17,9 @@ namespace Ets2SyncWindows
         public int SelectedGameIndex { get; set; }
         public bool BackupSavesBeforeSyncing { get; set; }
         public bool AutomaticallySyncOnSave { get; set; }
+        public bool SelectGameCardExpanded { get; set; }
+        public bool SelectDlcCardExpanded { get; set; }
+        public bool SelectSaveCardExpanded { get; set; }
 
         private PersistentAppState()
         {
@@ -46,7 +49,9 @@ namespace Ets2SyncWindows
                 SelectedCargoDlcs = new Dictionary<int, CargoDlc>(),
                 SelectedTrailerDlcs = new Dictionary<int, TrailerDlc>(),
                 BackupSavesBeforeSyncing = true,
-                AutomaticallySyncOnSave = false
+                SelectGameCardExpanded = true,
+                SelectDlcCardExpanded = true,
+                SelectSaveCardExpanded = true
             };
         }
 
@@ -74,6 +79,9 @@ namespace Ets2SyncWindows
             SelectedGameIndex = appState.SelectedGame.Index;
             BackupSavesBeforeSyncing = appState.BackupSavesBeforeSyncing;
             AutomaticallySyncOnSave = appState.AutomaticallySyncSaves;
+            SelectGameCardExpanded = appState.SelectGameCardExpanded;
+            SelectDlcCardExpanded = appState.SelectDlcCardExpanded;
+            SelectSaveCardExpanded = appState.SelectSaveCardExpanded;
 
             ReadDlcs(appState, SelectedMapDlcs, dlcs => dlcs.MapDlcs);
             ReadDlcs(appState, SelectedCargoDlcs, dlcs => dlcs.CargoDlcs);
@@ -106,6 +114,9 @@ namespace Ets2SyncWindows
             appState.BackupSavesBeforeSyncing = BackupSavesBeforeSyncing;
             appState.SelectedGame = GameData.Games.FirstOrDefault(g => g.Index == SelectedGameIndex);
             appState.AutomaticallySyncSaves = AutomaticallySyncOnSave;
+            appState.SelectGameCardExpanded = SelectGameCardExpanded;
+            appState.SelectDlcCardExpanded = SelectDlcCardExpanded;
+            appState.SelectSaveCardExpanded = SelectSaveCardExpanded;
 
             ApplyDlcs(appState, SelectedMapDlcs, dlcs => dlcs.MapDlcs);
             ApplyDlcs(appState, SelectedCargoDlcs, dlcs => dlcs.CargoDlcs);
