@@ -60,6 +60,9 @@ namespace PrismLibrary
             {
                 if (kv.Key == "profile_name")
                     result.Name = kv.Value;
+
+                if (kv.Key == "save_time")
+                    result.LastSaveTime = TimeUtility.EpochToDateTime(long.Parse(kv.Value));
             }
 
             result.Saves = ParseGameSaves(result.RootFilePath).OrderByDescending(save => save.SaveTime).ToArray();

@@ -235,8 +235,7 @@ namespace Ets2SyncWindows
                 Console.WriteLine(ex);
             }
 
-            SelectedProfile = GameProfiles.FirstOrDefault();
-
+            SelectedProfile = GameProfiles.OrderByDescending(g => g.LastSaveTime).FirstOrDefault();
             LoadingGameProfiles = false;
         }
 
