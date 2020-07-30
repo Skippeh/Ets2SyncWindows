@@ -23,7 +23,7 @@ namespace Ets2SyncWindows.Controls
             nameof(Expanded),
             typeof(bool),
             typeof(Card),
-            new UIPropertyMetadata(true)
+            new FrameworkPropertyMetadata(true, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault)
         );
 
         public static readonly DependencyProperty CanToggleExpansionProperty = DependencyProperty.Register(
