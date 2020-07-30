@@ -26,6 +26,7 @@
         </MenuItem>
         <MenuItem Header="_Settings">
             <MenuItem IsCheckable="True" Header="_Backup saves before syncing" StaysOpenOnClick="True" IsChecked="{Binding BackupSavesBeforeSyncing}" />
+            <MenuItem IsCheckable="True" Header="_Automatically sync on manual save (excluding quick saves)" StaysOpenOnClick="True" IsChecked="{Binding AutomaticallySyncSaves}" />
         </MenuItem>
     </Menu>
 </UserControl>

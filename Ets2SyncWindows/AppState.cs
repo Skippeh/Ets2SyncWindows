@@ -27,6 +27,7 @@ namespace Ets2SyncWindows
         private ImageSource thumbnailImage;
         private bool syncingJobs;
         private bool backupSavesBeforeSyncing;
+        private bool automaticallySyncSaves;
         
         private FileSystemWatcher configFileWatcher;
 
@@ -136,6 +137,16 @@ namespace Ets2SyncWindows
             set
             {
                 backupSavesBeforeSyncing = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool AutomaticallySyncSaves
+        {
+            get => automaticallySyncSaves;
+            set
+            {
+                automaticallySyncSaves = value;
                 OnPropertyChanged();
             }
         }

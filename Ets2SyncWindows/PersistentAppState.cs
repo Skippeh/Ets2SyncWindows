@@ -16,7 +16,7 @@ namespace Ets2SyncWindows
         public Dictionary<int, TrailerDlc> SelectedTrailerDlcs { get; set; }
         public int SelectedGameIndex { get; set; }
         public bool BackupSavesBeforeSyncing { get; set; }
-        public string SelectedGameProfile { get; set; }
+        public bool AutomaticallySyncOnSave { get; set; }
 
         private PersistentAppState()
         {
@@ -46,7 +46,7 @@ namespace Ets2SyncWindows
                 SelectedCargoDlcs = new Dictionary<int, CargoDlc>(),
                 SelectedTrailerDlcs = new Dictionary<int, TrailerDlc>(),
                 BackupSavesBeforeSyncing = true,
-                SelectedGameProfile = null
+                AutomaticallySyncOnSave = false
             };
         }
 
@@ -73,6 +73,7 @@ namespace Ets2SyncWindows
         {
             SelectedGameIndex = appState.SelectedGame.Index;
             BackupSavesBeforeSyncing = appState.BackupSavesBeforeSyncing;
+            AutomaticallySyncOnSave = appState.AutomaticallySyncSaves;
 
             ReadDlcs(appState, SelectedMapDlcs, dlcs => dlcs.MapDlcs);
             ReadDlcs(appState, SelectedCargoDlcs, dlcs => dlcs.CargoDlcs);
@@ -104,6 +105,7 @@ namespace Ets2SyncWindows
         {
             appState.BackupSavesBeforeSyncing = BackupSavesBeforeSyncing;
             appState.SelectedGame = GameData.Games.FirstOrDefault(g => g.Index == SelectedGameIndex);
+            appState.AutomaticallySyncSaves = AutomaticallySyncOnSave;
 
             ApplyDlcs(appState, SelectedMapDlcs, dlcs => dlcs.MapDlcs);
             ApplyDlcs(appState, SelectedCargoDlcs, dlcs => dlcs.CargoDlcs);
