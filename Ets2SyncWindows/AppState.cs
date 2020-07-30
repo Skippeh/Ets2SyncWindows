@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -148,6 +149,17 @@ namespace Ets2SyncWindows
             {
                 automaticallySyncSaves = value;
                 OnPropertyChanged();
+
+                if (value)
+                {
+                    PrismSaveManager.GameSaved += OnGameSaved;
+                    PrismSaveManager.ListenForGameSaves = true;
+                }
+                else
+                {
+                    PrismSaveManager.GameSaved -= OnGameSaved;
+                    PrismSaveManager.ListenForGameSaves = false;
+                }
             }
         }
 
@@ -157,8 +169,12 @@ namespace Ets2SyncWindows
 
         public bool ShouldUiBeEnabled => !SyncingJobs;
 
-        public AppState()
+        private readonly MainWindow mainWindow;
+
+        public AppState(MainWindow mainWindow)
         {
+            this.mainWindow = mainWindow;
+            
             foreach (Game game in GameData.Games)
             {
                 SelectedDlcs.Add(game, new GameDlcs(game));
@@ -248,6 +264,50 @@ namespace Ets2SyncWindows
 
             SelectedProfile = GameProfiles.OrderByDescending(g => g.LastSaveTime).FirstOrDefault();
             LoadingGameProfiles = false;
+        }
+
+        private void OnGameSaved(GameSavedEventArgs args)
+        {
+            if (args.Profile.GameType != SelectedGame.Type)
+                return;
+            
+            Application.Current.Dispatcher.InvokeAsync(async () =>
+            {
+                LoadingGameProfiles = true;
+                
+                SelectedProfile = GameProfiles.FirstOrDefault(profile => profile.RootFilePath.Equals(args.Profile.RootFilePath));
+
+                if (SelectedProfile == null)
+                {
+                    await ReloadGameProfiles();
+                    return;
+                }
+
+                var existingSave = SelectedProfile.Saves.FirstOrDefault(save => save.FilePath.Equals(args.Save.FilePath));
+
+                if (existingSave == null)
+                {
+                    // New save, assume it's newer than all the previous saves.
+                    SelectedProfile.Saves.Insert(0, args.Save);
+                    SelectedSave = args.Save;
+                }
+                else
+                {
+                    int index = SelectedProfile.Saves.IndexOf(existingSave);
+                    SelectedProfile.Saves.RemoveAt(index);
+                    SelectedProfile.Saves.Insert(index, args.Save);
+
+                    if (existingSave.FilePath.Equals(args.Save.FilePath))
+                        SelectedSave = args.Save;
+                }
+
+                if (args.Save.SaveType == GameSaveType.Manual && AutomaticallySyncSaves)
+                {
+                    await mainWindow.SyncJobs();
+                }
+
+                LoadingGameProfiles = false;
+            }, DispatcherPriority.Background);
         }
 
         #region INotifyPropertyChanged interface

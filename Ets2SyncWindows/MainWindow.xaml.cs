@@ -35,7 +35,7 @@ namespace Ets2SyncWindows
             InitializeComponent();
 
             loadedAppState = PersistentAppState.LoadOrCreateDefault(ConfigFilePath);
-            AppState = new AppState();
+            AppState = new AppState(this);
             loadedAppState.ApplyTo(AppState);
             loadedAppState.ReadFrom(AppState);
             loadedAppState.Save(ConfigFilePath);

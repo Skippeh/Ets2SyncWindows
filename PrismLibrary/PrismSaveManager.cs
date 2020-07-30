@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
@@ -9,7 +10,84 @@ namespace PrismLibrary
 {
     public static class PrismSaveManager
     {
-        public static IEnumerable<GameProfile> GetAllProfiles(GameType gameType)
+        private static bool listenForGameSaves;
+        private static Dictionary<GameProfile, FileSystemWatcher> gameSaveWatchers = new Dictionary<GameProfile, FileSystemWatcher>();
+
+        public delegate void GameSavedEventHandler(GameSavedEventArgs eventArgs);
+
+        public static event GameSavedEventHandler GameSaved;
+
+        public static bool ListenForGameSaves
+        {
+            get => listenForGameSaves;
+            set
+            {
+                if (listenForGameSaves == value)
+                    return;
+                
+                listenForGameSaves = value;
+
+                if (value)
+                {
+                    var allProfiles = GetAllProfiles(GameType.Ats, false).Concat(GetAllProfiles(GameType.Ets2, false));
+                    
+                    foreach (var profile in allProfiles)
+                    {
+                        string watchFilePath = Path.Combine(profile.RootFilePath);
+
+                        if (!Directory.Exists(watchFilePath))
+                            continue;
+                        
+                        var watcher = new FileSystemWatcher
+                        {
+                            Path = watchFilePath,
+                            Filter = "*game.sii",
+                            IncludeSubdirectories = true,
+                            EnableRaisingEvents = true
+                        };
+
+                        watcher.Changed += OnSaveFileChanged;
+                        watcher.Created += OnSaveFileChanged;
+                        watcher.Renamed += OnSaveFileChanged;
+                    }
+                }
+                else
+                {
+                    foreach (var watcher in gameSaveWatchers.Values)
+                    {
+                        watcher.EnableRaisingEvents = false;
+                        watcher.Dispose();
+                    }
+
+                    gameSaveWatchers.Clear();
+                }
+            }
+        }
+
+        private static void OnSaveFileChanged(object sender, FileSystemEventArgs args)
+        {
+            if (args.ChangeType != WatcherChangeTypes.Created && args.ChangeType != WatcherChangeTypes.Changed && args.ChangeType != WatcherChangeTypes.Renamed)
+                return;
+            
+            string directoryPath = Path.GetDirectoryName(args.FullPath);
+            var profilePath = Path.GetFullPath(Path.Combine(directoryPath, "../..")); // The profile path is 2 directories up from the save directory
+
+            string steamPath = SteamUtility.GetSteamInstallDirectory();
+            
+            ProfileType profileType = PathUtility.IsPathContainedIn(profilePath, steamPath) ? ProfileType.SteamCloud : ProfileType.Local;
+            GameProfile gameProfile = ParseGameProfile(profilePath, profileType, false);
+            GameSave gameSave = ParseGameSave(directoryPath);
+
+            if (gameSave != null)
+                OnGameSaved(gameProfile, gameSave);
+        }
+
+        private static void OnGameSaved(GameProfile profile, GameSave save)
+        {
+            GameSaved?.Invoke(new GameSavedEventArgs(profile, save));
+        }
+
+        public static IEnumerable<GameProfile> GetAllProfiles(GameType gameType, bool readAllSaves = true)
         {
             foreach (KeyValuePair<string, string> kv in SteamUtility.GetAppIdCloudDataPath(GetAppId(gameType)))
             {
@@ -21,7 +99,7 @@ namespace PrismLibrary
                 {
                     foreach (string profilePath in Directory.EnumerateDirectories(profilesPath))
                     {
-                        yield return ParseGameProfile(profilePath, ProfileType.SteamCloud);
+                        yield return ParseGameProfile(profilePath, ProfileType.SteamCloud, readAllSaves);
                     }
                 }
             }
@@ -36,12 +114,12 @@ namespace PrismLibrary
             {
                 foreach (string profilePath in Directory.EnumerateDirectories(documentsProfilePath))
                 {
-                    yield return ParseGameProfile(profilePath, ProfileType.Local);
+                    yield return ParseGameProfile(profilePath, ProfileType.Local, readAllSaves);
                 }
             }
         }
 
-        private static GameProfile ParseGameProfile(string profilePath, ProfileType profileType)
+        private static GameProfile ParseGameProfile(string profilePath, ProfileType profileType, bool readAllSaves = true)
         {
             var profileDataPath = Path.Combine(profilePath, "profile.sii");
 
@@ -57,6 +135,8 @@ namespace PrismLibrary
                 RootFilePath = profilePath
             };
 
+            result.GameType = GetGameTypeFromPathAndProfileType(profilePath, profileType);
+
             foreach (var kv in PrismUtility.ParseSiiTextFile(bytesAsString))
             {
                 if (kv.Key == "profile_name")
@@ -66,7 +146,9 @@ namespace PrismLibrary
                     result.LastSaveTime = TimeUtility.EpochToDateTime(long.Parse(kv.Value));
             }
 
-            result.Saves = ParseGameSaves(result.RootFilePath).OrderByDescending(save => save.SaveTime).ToArray();
+            if (readAllSaves)
+                result.Saves = new ObservableCollection<GameSave>(ParseGameSaves(result.RootFilePath).OrderByDescending(save => save.SaveTime));
+            
             return result;
         }
 
@@ -79,66 +161,74 @@ namespace PrismLibrary
 
             foreach (string saveDirectoryPath in Directory.EnumerateDirectories(savesPath))
             {
-                string infoFilePath = Path.Combine(saveDirectoryPath, "info.sii");
-                string gameFilePath = Path.Combine(saveDirectoryPath, "game.sii");
-                string thumbnailFilePath = Path.Combine(saveDirectoryPath, "preview.tga");
+                var gameSave = ParseGameSave(saveDirectoryPath);
 
-                if (!File.Exists(infoFilePath) || !File.Exists(gameFilePath))
-                    continue;
-
-                using var fileStream = File.OpenRead(infoFilePath);
-                byte[] bytes = PrismEncryption.DecryptAndDecompressFile(fileStream);
-                string bytesAsString = Encoding.UTF8.GetString(bytes);
-                var result = new GameSave
-                {
-                    FilePath = gameFilePath,
-                    ThumbnailPath = File.Exists(thumbnailFilePath) ? thumbnailFilePath : null
-                };
-
-                {
-                    string directoryName = new DirectoryInfo(saveDirectoryPath).Name;
-                    string lowerInvariant = directoryName.ToLowerInvariant();
-                    
-                    if (lowerInvariant.Contains("quicksave"))
-                    {
-                        result.SaveType = GameSaveType.Quick;
-                    }
-                    else if (lowerInvariant.Contains("autosave"))
-                    {
-                        result.SaveType = GameSaveType.Auto;
-                    }
-                    else
-                    {
-                        result.SaveType = GameSaveType.Manual;
-                    }
-                }
-
-                foreach (var kv in PrismUtility.ParseSiiTextFile(bytesAsString))
-                {
-                    if (kv.Key == "name")
-                        result.Name = kv.Value;
-                    else if (kv.Key == "file_time")
-                        result.SaveTime = TimeUtility.EpochToDateTime(long.Parse(kv.Value));
-                }
-
-                if (result.Name.ToLower().Contains("@@noname_save_game@@") || string.IsNullOrEmpty(result.Name))
-                {
-                    string saveName = "Unnamed save";
-
-                    if (result.SaveType == GameSaveType.Quick)
-                    {
-                        saveName = "Quicksave";
-                    }
-                    else if (result.SaveType == GameSaveType.Auto)
-                    {
-                        saveName = "Autosave";
-                    }
-                    
-                    result.Name = saveName;
-                }
-
-                yield return result;
+                if (gameSave != null)
+                    yield return gameSave;
             }
+        }
+
+        private static GameSave ParseGameSave(string saveDirectoryPath)
+        {
+            string infoFilePath = Path.Combine(saveDirectoryPath, "info.sii");
+            string gameFilePath = Path.Combine(saveDirectoryPath, "game.sii");
+            string thumbnailFilePath = Path.Combine(saveDirectoryPath, "preview.tga");
+
+            if (!File.Exists(infoFilePath) || !File.Exists(gameFilePath))
+                return null;
+
+            using var fileStream = File.OpenRead(infoFilePath);
+            byte[] bytes = PrismEncryption.DecryptAndDecompressFile(fileStream);
+            string bytesAsString = Encoding.UTF8.GetString(bytes);
+            var result = new GameSave
+            {
+                FilePath = gameFilePath,
+                ThumbnailPath = File.Exists(thumbnailFilePath) ? thumbnailFilePath : null
+            };
+
+            {
+                string directoryName = new DirectoryInfo(saveDirectoryPath).Name;
+                string lowerInvariant = directoryName.ToLowerInvariant();
+
+                if (lowerInvariant.Contains("quicksave"))
+                {
+                    result.SaveType = GameSaveType.Quick;
+                }
+                else if (lowerInvariant.Contains("autosave"))
+                {
+                    result.SaveType = GameSaveType.Auto;
+                }
+                else
+                {
+                    result.SaveType = GameSaveType.Manual;
+                }
+            }
+
+            foreach (var kv in PrismUtility.ParseSiiTextFile(bytesAsString))
+            {
+                if (kv.Key == "name")
+                    result.Name = kv.Value;
+                else if (kv.Key == "file_time")
+                    result.SaveTime = TimeUtility.EpochToDateTime(long.Parse(kv.Value));
+            }
+
+            if (result.Name.ToLower().Contains("@@noname_save_game@@") || string.IsNullOrEmpty(result.Name))
+            {
+                string saveName = "Unnamed save";
+
+                if (result.SaveType == GameSaveType.Quick)
+                {
+                    saveName = "Quicksave";
+                }
+                else if (result.SaveType == GameSaveType.Auto)
+                {
+                    saveName = "Autosave";
+                }
+
+                result.Name = saveName;
+            }
+
+            return result;
         }
 
         private static ulong GetAppId(GameType gameType)
@@ -150,6 +240,36 @@ namespace PrismLibrary
             }
 
             throw new NotImplementedException();
+        }
+
+        private static GameType GetGameTypeFromPathAndProfileType(string profilePath, ProfileType profileType)
+        {
+            string normalizedPath = profilePath.Replace("\\", "/");
+            switch (profileType)
+            {
+                case ProfileType.Local:
+                {
+                    if (normalizedPath.Contains("/Euro Truck Simulator 2/"))
+                        return GameType.Ets2;
+
+                    if (normalizedPath.Contains("/American Truck Simulator/"))
+                        return GameType.Ats;
+                    
+                    break;
+                }
+                case ProfileType.SteamCloud:
+                {
+                    if (normalizedPath.Contains("/227300/"))
+                        return GameType.Ets2;
+
+                    if (normalizedPath.Contains("/270880/"))
+                        return GameType.Ats;
+
+                    break;
+                }
+            }
+            
+            throw new NotImplementedException($"Could not determine game type from profile path and type: {profilePath} - {profileType}");
         }
     }
 }
