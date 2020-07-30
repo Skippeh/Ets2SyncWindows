@@ -78,7 +78,7 @@
                     </StackPanel>
                 </Border>
             </ScrollViewer>
-            <controls:ContentContainer Grid.Row="1" IsEnabled="{Binding ShouldUiBeEnabled}" DockPanel.Dock="Bottom" BorderBrush="{StaticResource BottomBorder}" BorderThickness="0 1 0 0">
+            <controls:ContentContainer Grid.Row="1" IsEnabled="{Binding ShouldUiBeEnabled}" BorderBrush="{StaticResource BottomBorder}" BorderThickness="0 1 0 0">
                 <controls:SyncJobsContainer />
             </controls:ContentContainer>
         </Grid>
