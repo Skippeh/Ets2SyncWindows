@@ -1,6 +1,8 @@
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Threading;
+using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Pfim;
@@ -20,7 +22,24 @@ namespace Ets2SyncWindows
                 IImage image = Pfim.Pfim.FromFile(gameSave.ThumbnailPath);
                 GCHandle pinnedArray = GCHandle.Alloc(image.Data, GCHandleType.Pinned);
                 IntPtr addr = pinnedArray.AddrOfPinnedObject();
-                var imageSource = BitmapSource.Create(image.Width, image.Height, 96, 96, GetPixelFormat(image), null, addr, image.DataLen, image.Stride);
+
+                BitmapSource imageSource = null;
+
+                void CreateImageSource()
+                {
+                    imageSource = BitmapSource.Create(image.Width, image.Height, 96, 96, GetPixelFormat(image), null, addr, image.DataLen, image.Stride);
+                }
+                
+                // Make sure to create the image on the dispatcher thread or the application will crash
+                if (Application.Current.Dispatcher.Thread == Thread.CurrentThread)
+                {
+                    CreateImageSource();
+                }
+                else
+                {
+                    Application.Current.Dispatcher.Invoke(CreateImageSource);
+                }
+
                 pinnedArray.Free();
 
                 return imageSource;
