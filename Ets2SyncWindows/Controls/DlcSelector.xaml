@@ -14,7 +14,14 @@
             Text="{Binding Title}"
         />
         <StackPanel x:Name="ItemsControlHeader">
-            <CheckBox Checked="OnSelectAllChecked" Unchecked="OnSelectAllUnchecked" x:Name="CheckBoxSelectAll">Select all</CheckBox>
+            <CheckBox
+                Checked="OnSelectAllChecked"
+                Unchecked="OnSelectAllUnchecked"
+                x:Name="CheckBoxSelectAll"
+                HorizontalAlignment="Left"
+            >
+                Select all
+            </CheckBox>
         </StackPanel>
         <StackPanel x:Name="ItemsControlHeaderNoItems">
             <TextBlock>This game has no DLC of this type.</TextBlock>
@@ -27,7 +34,12 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate DataType="ets2SyncWindows:Dlc">
-                    <CheckBox IsChecked="{Binding Selected}" Checked="OnDlcCheckedChanged" Unchecked="OnDlcCheckedChanged">
+                    <CheckBox
+                        IsChecked="{Binding Selected}"
+                        Checked="OnDlcCheckedChanged"
+                        Unchecked="OnDlcCheckedChanged"
+                        HorizontalAlignment="Left"
+                    >
                         <TextBlock Text="{Binding Name}" />
                     </CheckBox>
                 </DataTemplate>
