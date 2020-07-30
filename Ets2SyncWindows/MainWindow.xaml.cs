@@ -37,8 +37,7 @@ namespace Ets2SyncWindows
             loadedAppState = PersistentAppState.LoadOrCreateDefault(ConfigFilePath);
             AppState = new AppState(this);
             loadedAppState.ApplyTo(AppState);
-            loadedAppState.ReadFrom(AppState);
-            loadedAppState.Save(ConfigFilePath);
+            SaveConfig();
 
             DataContext = AppState;
         }
@@ -48,11 +47,16 @@ namespace Ets2SyncWindows
             if (AppState.SyncingJobs)
                 return;
 
-            loadedAppState.ReadFrom(AppState);
-            loadedAppState.Save(ConfigFilePath);
+            SaveConfig();
             AppState.SyncingJobs = true;
             await Task.Delay(1000);
             AppState.SyncingJobs = false;
+        }
+
+        public void SaveConfig()
+        {
+            loadedAppState.ReadFrom(AppState);
+            loadedAppState.Save(ConfigFilePath);
         }
 
         private async void OnKeyDown(object sender, KeyEventArgs args)
@@ -78,6 +82,11 @@ namespace Ets2SyncWindows
         private void OnRefreshGameConfigClicked(object sender, RoutedEventArgs args)
         {
             AppState.SelectedGame = AppState.SelectedGame; // Config is reloaded when game is set.
+        }
+
+        private void OnWindowClosed(object sender, EventArgs args)
+        {
+            SaveConfig();
         }
     }
 }

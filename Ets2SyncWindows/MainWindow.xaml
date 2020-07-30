@@ -16,6 +16,7 @@
         WindowStartupLocation="CenterScreen"
         d:DataContext="{Binding AppState, RelativeSource={RelativeSource Self}}"
         KeyDown="OnKeyDown"
+        Closed="OnWindowClosed"
 >
     <Window.Resources>
         <root:ConvertBooleanToGameConfigAlertType x:Key="ConvertBooleanToGameConfigAlertType" />
