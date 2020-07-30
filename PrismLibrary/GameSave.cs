@@ -8,5 +8,6 @@ namespace PrismLibrary
         public string FilePath { get; set; }
         public string ThumbnailPath { get; set; }
         public DateTime SaveTime { get; set; }
+        public GameSaveType SaveType { get; set; }
     }
 }

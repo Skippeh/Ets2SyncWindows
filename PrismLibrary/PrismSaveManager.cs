@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 
 namespace PrismLibrary
@@ -94,6 +95,24 @@ namespace PrismLibrary
                     ThumbnailPath = File.Exists(thumbnailFilePath) ? thumbnailFilePath : null
                 };
 
+                {
+                    string directoryName = new DirectoryInfo(saveDirectoryPath).Name;
+                    string lowerInvariant = directoryName.ToLowerInvariant();
+                    
+                    if (lowerInvariant.Contains("quicksave"))
+                    {
+                        result.SaveType = GameSaveType.Quick;
+                    }
+                    else if (lowerInvariant.Contains("autosave"))
+                    {
+                        result.SaveType = GameSaveType.Auto;
+                    }
+                    else
+                    {
+                        result.SaveType = GameSaveType.Manual;
+                    }
+                }
+
                 foreach (var kv in PrismUtility.ParseSiiTextFile(bytesAsString))
                 {
                     if (kv.Key == "name")
@@ -106,12 +125,11 @@ namespace PrismLibrary
                 {
                     string saveName = "Unnamed save";
 
-                    string directoryName = new DirectoryInfo(saveDirectoryPath).Name;
-                    if (directoryName.ToLower().Contains("quicksave"))
+                    if (result.SaveType == GameSaveType.Quick)
                     {
                         saveName = "Quicksave";
                     }
-                    else if (directoryName.ToLower().Contains("autosave"))
+                    else if (result.SaveType == GameSaveType.Auto)
                     {
                         saveName = "Autosave";
                     }
