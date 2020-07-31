@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Ets2SyncWindows.Controls;
 using Ets2SyncWindows.Data;
+using Hardcodet.Wpf.TaskbarNotification;
 using PrismLibrary;
 
 namespace Ets2SyncWindows
@@ -59,6 +61,11 @@ namespace Ets2SyncWindows
             loadedAppState.Save(ConfigFilePath);
         }
 
+        public void ShowTaskBarPopup(string title, string message, BalloonIcon symbol)
+        {
+            TaskBarIcon.ShowBalloonTip(title, message, symbol);
+        }
+
         private async void OnKeyDown(object sender, KeyEventArgs args)
         {
             if (args.Key == Key.F5)
@@ -87,6 +94,31 @@ namespace Ets2SyncWindows
         private void OnWindowClosed(object sender, EventArgs args)
         {
             SaveConfig();
+        }
+
+        private void OnWindowClosing(object sender, CancelEventArgs args)
+        {
+            if (AppState.MinimizeToTaskBar)
+            {
+                Hide();
+                args.Cancel = true;
+            }
+        }
+
+        private void OnTrayIconMouseDoubleClick(object sender, RoutedEventArgs e)
+        {
+            Show();
+            Activate(); // Bring window to front
+        }
+
+        private void OnWindowVisibilityChanged(object sender, DependencyPropertyChangedEventArgs args)
+        {
+            // Visibility is set to hidden when the Hide() is called.
+            // OnWindowClosing is called when the application is quitting too so we can't use that to show task bar notification. 
+            if (Visibility == Visibility.Hidden)
+            {
+                ShowTaskBarPopup("Minimized to Taskbar", "ATS/ETS2 Job Sync has been minimized to the taskbar.", BalloonIcon.Info);
+            }
         }
     }
 }

@@ -32,6 +32,7 @@ namespace Ets2SyncWindows
         private bool selectSaveCardExpanded;
         private bool selectDlcCardExpanded;
         private bool selectGameCardExpanded;
+        private bool minimizeToTaskBar;
         
         private FileSystemWatcher configFileWatcher;
 
@@ -202,11 +203,21 @@ namespace Ets2SyncWindows
             }
         }
 
-        private readonly MainWindow mainWindow;
+        public bool MinimizeToTaskBar
+        {
+            get => minimizeToTaskBar;
+            set
+            {
+                minimizeToTaskBar = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public MainWindow MainWindow { get; }
 
         public AppState(MainWindow mainWindow)
         {
-            this.mainWindow = mainWindow;
+            MainWindow = mainWindow;
             
             foreach (Game game in GameData.Games)
             {
@@ -336,7 +347,7 @@ namespace Ets2SyncWindows
 
                 if (args.Save.SaveType == GameSaveType.Manual && AutomaticallySyncSaves)
                 {
-                    await mainWindow.SyncJobs();
+                    await MainWindow.SyncJobs();
                 }
 
                 LoadingGameProfiles = false;

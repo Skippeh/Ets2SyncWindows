@@ -1,0 +1,32 @@
+<ContextMenu x:Class="Ets2SyncWindows.TaskBarContextMenu"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Ets2SyncWindows"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300"
+             d:DataContext="{d:DesignInstance Type=local:AppState, IsDesignTimeCreatable=False}">
+    <MenuItem Header="Show" Click="OnClickOpen" />
+    <Separator />
+    <MenuItem Header="{Binding}" IsEnabled="{Binding ShouldUiBeEnabled}" Click="OnSyncJobsClicked">
+        <MenuItem.HeaderTemplate>
+            <DataTemplate>
+                <StackPanel>
+                    <TextBlock Style="{StaticResource SubHeader}" Margin="0">Sync Jobs</TextBlock>
+                    <TextBlock>
+                        <Run>Profile:</Run>
+                        <Run Text="{Binding SelectedProfile.Name}" />
+                    </TextBlock>
+                    <TextBlock>
+                        <Run>Save:</Run>
+                        <Run Text="{Binding SelectedSave.Name}" />
+                        <Run>(</Run><Run Text="{Binding SelectedSave.SaveTime, Converter={StaticResource DateToTimeAgoConverter}}" /><Run>)</Run>
+                    </TextBlock>
+                </StackPanel>
+            </DataTemplate>
+        </MenuItem.HeaderTemplate>
+    </MenuItem>
+    <Separator />
+    <MenuItem Header="Exit" Click="OnExitClicked" />
+</ContextMenu>

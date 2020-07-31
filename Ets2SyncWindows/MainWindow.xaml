@@ -6,6 +6,7 @@
         xmlns:controls="clr-namespace:Ets2SyncWindows.Controls"
         xmlns:root="clr-namespace:Ets2SyncWindows"
         xmlns:system="clr-namespace:System;assembly=System.Runtime"
+        xmlns:tb="http://www.hardcodet.net/taskbar"
         mc:Ignorable="d"
         Title="ATS/ETS2 Job Sync"
         Width="700" Height="750"
@@ -17,13 +18,24 @@
         d:DataContext="{Binding AppState, RelativeSource={RelativeSource Self}}"
         KeyDown="OnKeyDown"
         Closed="OnWindowClosed"
+        Closing="OnWindowClosing"
+        IsVisibleChanged="OnWindowVisibilityChanged"
 >
     <Window.Resources>
         <root:ConvertBooleanToGameConfigAlertType x:Key="ConvertBooleanToGameConfigAlertType" />
         <SolidColorBrush x:Key="BottomBorder" Color="#44000000" />
+        <root:TaskBarContextMenu x:Key="ContextMenu" />
     </Window.Resources>
     <DockPanel>
         <root:MenuBar />
+        <tb:TaskbarIcon
+            x:Name="TaskBarIcon"
+            ToolTipText="ATS/ETS2 Job Sync"
+            MenuActivation="LeftOrRightClick"
+            ContextMenu="{StaticResource ContextMenu}"
+            TrayMouseDoubleClick="OnTrayIconMouseDoubleClick"
+        >
+        </tb:TaskbarIcon>
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*" />

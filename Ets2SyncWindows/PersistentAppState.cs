@@ -20,6 +20,7 @@ namespace Ets2SyncWindows
         public bool SelectGameCardExpanded { get; set; }
         public bool SelectDlcCardExpanded { get; set; }
         public bool SelectSaveCardExpanded { get; set; }
+        public bool MinimizeToTaskBar { get; set; }
 
         private PersistentAppState()
         {
@@ -51,7 +52,8 @@ namespace Ets2SyncWindows
                 BackupSavesBeforeSyncing = true,
                 SelectGameCardExpanded = true,
                 SelectDlcCardExpanded = true,
-                SelectSaveCardExpanded = true
+                SelectSaveCardExpanded = true,
+                MinimizeToTaskBar = true
             };
         }
 
@@ -82,6 +84,7 @@ namespace Ets2SyncWindows
             SelectGameCardExpanded = appState.SelectGameCardExpanded;
             SelectDlcCardExpanded = appState.SelectDlcCardExpanded;
             SelectSaveCardExpanded = appState.SelectSaveCardExpanded;
+            MinimizeToTaskBar = appState.MinimizeToTaskBar;
 
             ReadDlcs(appState, SelectedMapDlcs, dlcs => dlcs.MapDlcs);
             ReadDlcs(appState, SelectedCargoDlcs, dlcs => dlcs.CargoDlcs);
@@ -117,6 +120,7 @@ namespace Ets2SyncWindows
             appState.SelectGameCardExpanded = SelectGameCardExpanded;
             appState.SelectDlcCardExpanded = SelectDlcCardExpanded;
             appState.SelectSaveCardExpanded = SelectSaveCardExpanded;
+            appState.MinimizeToTaskBar = MinimizeToTaskBar;
 
             ApplyDlcs(appState, SelectedMapDlcs, dlcs => dlcs.MapDlcs);
             ApplyDlcs(appState, SelectedCargoDlcs, dlcs => dlcs.CargoDlcs);
