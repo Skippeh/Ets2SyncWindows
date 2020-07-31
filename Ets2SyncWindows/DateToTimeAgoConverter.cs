@@ -15,7 +15,7 @@ namespace Ets2SyncWindows
             if (!(value is DateTime dateTime))
                 throw new ArgumentException("Specified value is not a DateTime.", nameof(value));
 
-            string result = dateTime.Moment().Calendar();
+            string result = dateTime.Moment().From();
 
             if (parameter is string strParameter && strParameter == "initialLowerCase")
             {
