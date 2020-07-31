@@ -8,6 +8,7 @@
         <FontFamily x:Key="OpenSans">pack://application:,,,Fonts/#Open Sans</FontFamily>
         <FontFamily x:Key="FontAwesome">pack://application:,,,Fonts/#Font Awesome 5 Free</FontFamily>
         <FontFamily x:Key="FontAwesomeBrands">pack://application:,,,Fonts/#Font Awesome 5 Brands</FontFamily>
+        <BitmapImage x:Key="MainIcon" UriSource="/Ets2SyncWindows;component/Icons/icon.ico" />
         <system:String x:Key="FAArrowDoubleDown">&#xf103;</system:String>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibility" />
         <local:ValueConverterGroup x:Key="InvertBooleanToVisibility">

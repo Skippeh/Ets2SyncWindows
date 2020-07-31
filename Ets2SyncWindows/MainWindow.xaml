@@ -19,6 +19,7 @@
         KeyDown="OnKeyDown"
         Closed="OnWindowClosed"
         Closing="OnWindowClosing"
+        Icon="{StaticResource MainIcon}"
 >
     <Window.Resources>
         <root:ConvertBooleanToGameConfigAlertType x:Key="ConvertBooleanToGameConfigAlertType" />
@@ -33,6 +34,7 @@
             MenuActivation="LeftOrRightClick"
             ContextMenu="{StaticResource ContextMenu}"
             TrayMouseDoubleClick="OnTrayIconMouseDoubleClick"
+            IconSource="{StaticResource MainIcon}"
         >
         </tb:TaskbarIcon>
         <Grid>

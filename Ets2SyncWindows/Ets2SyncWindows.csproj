@@ -91,6 +91,8 @@
       <Resource Include="Fonts\Font Awesome 5 Free-Regular-400.otf" />
       <None Remove="Fonts\Font Awesome 5 Free-Solid-900.otf" />
       <Resource Include="Fonts\Font Awesome 5 Free-Solid-900.otf" />
+      <None Remove="Icons\icon.ico" />
+      <Resource Include="Icons\icon.ico" />
     </ItemGroup>
 
     <ItemGroup>
