@@ -27,7 +27,7 @@
         <MenuItem Header="_Settings">
             <MenuItem IsCheckable="True" Header="_Backup saves before syncing" StaysOpenOnClick="True" IsChecked="{Binding BackupSavesBeforeSyncing}" />
             <MenuItem IsCheckable="True" Header="_Automatically sync on manual save (excluding quick saves)" StaysOpenOnClick="True" IsChecked="{Binding AutomaticallySyncSaves}" />
-            <MenuItem IsCheckable="True" Header="_Minimize to task bar when closed" StaysOpenOnClick="True" IsChecked="{Binding MinimizeToTaskBar}" />
+            <MenuItem IsCheckable="True" Header="_Minimize to task bar when the window is closed" StaysOpenOnClick="True" IsChecked="{Binding MinimizeToTaskBar}" />
         </MenuItem>
     </Menu>
 </UserControl>

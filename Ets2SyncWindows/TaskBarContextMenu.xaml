@@ -21,7 +21,7 @@
                     <TextBlock>
                         <Run>Save:</Run>
                         <Run Text="{Binding SelectedSave.Name}" />
-                        <Run>(</Run><Run Text="{Binding SelectedSave.SaveTime, Converter={StaticResource DateToTimeAgoConverter}}" /><Run>)</Run>
+                        <Run>(saved</Run> <Run Text="{Binding SelectedSave.SaveTime, Converter={StaticResource DateToTimeAgoConverter}, ConverterParameter=initialLowerCase}" /><Run>)</Run>
                     </TextBlock>
                 </StackPanel>
             </DataTemplate>
