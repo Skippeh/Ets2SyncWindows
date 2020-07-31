@@ -21,7 +21,7 @@ namespace Ets2SyncWindows
 
         private void OnExitClicked(object sender, RoutedEventArgs args)
         {
-            Application.Current.Shutdown();
+            AppState.MainWindow.Shutdown();
         }
 
         private async void OnSyncJobsClicked(object sender, RoutedEventArgs e)

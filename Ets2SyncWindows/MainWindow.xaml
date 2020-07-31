@@ -19,7 +19,6 @@
         KeyDown="OnKeyDown"
         Closed="OnWindowClosed"
         Closing="OnWindowClosing"
-        IsVisibleChanged="OnWindowVisibilityChanged"
 >
     <Window.Resources>
         <root:ConvertBooleanToGameConfigAlertType x:Key="ConvertBooleanToGameConfigAlertType" />

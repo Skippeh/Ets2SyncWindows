@@ -12,7 +12,7 @@ namespace Ets2SyncWindows
 
         private void OnExitClicked(object sender, RoutedEventArgs e)
         {
-            Application.Current.Shutdown();
+            this.FindParent<MainWindow>().Shutdown();
         }
     }
 }

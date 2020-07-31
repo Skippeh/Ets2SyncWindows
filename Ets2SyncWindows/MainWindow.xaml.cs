@@ -32,6 +32,8 @@ namespace Ets2SyncWindows
 
         private const string ConfigFilePath = "config.json";
 
+        private bool isShuttingDown;
+        
         public MainWindow()
         {
             InitializeComponent();
@@ -102,6 +104,11 @@ namespace Ets2SyncWindows
             {
                 Hide();
                 args.Cancel = true;
+
+                if (!isShuttingDown)
+                {
+                    ShowTaskBarPopup("Minimized to Taskbar", "ATS/ETS2 Job Sync has been minimized to the taskbar.", BalloonIcon.Info);
+                }
             }
         }
 
@@ -111,14 +118,10 @@ namespace Ets2SyncWindows
             Activate(); // Bring window to front
         }
 
-        private void OnWindowVisibilityChanged(object sender, DependencyPropertyChangedEventArgs args)
+        public void Shutdown()
         {
-            // Visibility is set to hidden when the Hide() is called.
-            // OnWindowClosing is called when the application is quitting too so we can't use that to show task bar notification. 
-            if (Visibility == Visibility.Hidden)
-            {
-                ShowTaskBarPopup("Minimized to Taskbar", "ATS/ETS2 Job Sync has been minimized to the taskbar.", BalloonIcon.Info);
-            }
+            isShuttingDown = true;
+            Application.Current.Shutdown();
         }
     }
 }
