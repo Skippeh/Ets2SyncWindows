@@ -57,6 +57,11 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(local:Theming.ButtonDisabledForeground)}" />
+                </Trigger>
+            </Style.Triggers>
         </Style>
         <Style x:Key="SuccessButton" TargetType="Button" BasedOn="{StaticResource BaseButton}">
             <Setter Property="Background" Value="#28a745" />
@@ -79,6 +84,14 @@
             <Setter Property="local:Theming.ButtonHoverBackground" Value="{StaticResource LinkButtonHoverBackground}" />
             <Setter Property="local:Theming.ButtonPressedBackground" Value="{StaticResource PressedButtonBorderBrush}" />
             <Setter Property="BorderThickness" Value="0" />
+        </Style>
+        <Style x:Key="WarningButton" TargetType="Button" BasedOn="{StaticResource BaseButton}">
+            <Setter Property="Background" Value="#ffc107" />
+            <Setter Property="Foreground" Value="Black" />
+            <Setter Property="local:Theming.ButtonHoverBackground" Value="#e0a800" />
+            <Setter Property="local:Theming.ButtonPressedBackground" Value="#d39e00" />
+            <Setter Property="local:Theming.ButtonDisabledBackground" Value="#ffd75e" />
+            <Setter Property="local:Theming.ButtonDisabledForeground" Value="#6f7275" />
         </Style>
         <Style x:Key="LinkButtonNoCornerRadius" TargetType="Button" BasedOn="{StaticResource LinkButton}">
             <Style.Resources>
