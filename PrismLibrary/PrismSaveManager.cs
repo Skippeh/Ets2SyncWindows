@@ -31,7 +31,7 @@ namespace PrismLibrary
                 {
                     var allProfiles = GetAllProfiles(GameType.Ats, false).Concat(GetAllProfiles(GameType.Ets2, false));
                     
-                    foreach (var profile in allProfiles)
+                    foreach (GameProfile profile in allProfiles)
                     {
                         string watchFilePath = Path.Combine(profile.RootFilePath);
                         
@@ -97,7 +97,10 @@ namespace PrismLibrary
                 {
                     foreach (string profilePath in Directory.EnumerateDirectories(profilesPath))
                     {
-                        yield return ParseGameProfile(profilePath, ProfileType.SteamCloud, readAllSaves);
+                        var gameProfile = ParseGameProfile(profilePath, ProfileType.SteamCloud, readAllSaves);
+
+                        if (gameProfile != null)
+                            yield return gameProfile;
                     }
                 }
             }
@@ -112,7 +115,10 @@ namespace PrismLibrary
             {
                 foreach (string profilePath in Directory.EnumerateDirectories(documentsProfilePath))
                 {
-                    yield return ParseGameProfile(profilePath, ProfileType.Local, readAllSaves);
+                    var gameProfile = ParseGameProfile(profilePath, ProfileType.Local, readAllSaves);
+
+                    if (gameProfile != null)
+                        yield return gameProfile;
                 }
             }
         }
