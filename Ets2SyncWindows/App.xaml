@@ -57,11 +57,6 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
-            <Style.Triggers>
-                <Trigger Property="IsEnabled" Value="False">
-                    <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(local:Theming.ButtonDisabledForeground)}" />
-                </Trigger>
-            </Style.Triggers>
         </Style>
         <Style x:Key="SuccessButton" TargetType="Button" BasedOn="{StaticResource BaseButton}">
             <Setter Property="Background" Value="#28a745" />
@@ -87,11 +82,16 @@
         </Style>
         <Style x:Key="WarningButton" TargetType="Button" BasedOn="{StaticResource BaseButton}">
             <Setter Property="Background" Value="#ffc107" />
-            <Setter Property="Foreground" Value="Black" />
+            <Setter Property="Foreground" Value="#212529" />
             <Setter Property="local:Theming.ButtonHoverBackground" Value="#e0a800" />
             <Setter Property="local:Theming.ButtonPressedBackground" Value="#d39e00" />
             <Setter Property="local:Theming.ButtonDisabledBackground" Value="#ffd75e" />
-            <Setter Property="local:Theming.ButtonDisabledForeground" Value="#6f7275" />
+            <!-- Would be nice to define this as a custom property but i haven't been able to get it to work -->
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Foreground" Value="#6f7275" />
+                </Trigger>
+            </Style.Triggers>
         </Style>
         <Style x:Key="LinkButtonNoCornerRadius" TargetType="Button" BasedOn="{StaticResource LinkButton}">
             <Style.Resources>

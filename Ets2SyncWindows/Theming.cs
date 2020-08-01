@@ -56,22 +56,5 @@ namespace Ets2SyncWindows
         {
             return (Brush) dependencyObject.GetValue(ButtonDisabledBackgroundProperty);
         }
-
-        public static readonly DependencyProperty ButtonDisabledForegroundProperty = DependencyProperty.RegisterAttached(
-            "ButtonDisabledForeground",
-            typeof(Brush),
-            typeof(Theming),
-            new FrameworkPropertyMetadata(new SolidColorBrush(Colors.Purple), FrameworkPropertyMetadataOptions.Inherits)
-        );
-
-        public static void SetButtonDisabledForeground(DependencyObject dependencyObject, Brush value)
-        {
-            dependencyObject.SetValue(ButtonDisabledForegroundProperty, value);
-        }
-
-        public static Brush GetButtonDisabledForeground(DependencyObject dependencyObject)
-        {
-            return (Brush) dependencyObject.GetValue(ButtonDisabledForegroundProperty);
-        }
     }
 }
