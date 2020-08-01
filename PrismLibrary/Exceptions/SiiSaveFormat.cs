@@ -10,8 +10,7 @@ namespace PrismLibrary.Exceptions
         public enum ParseError
         {
             InvalidSize,
-            InvalidSignature,
-            NotEncrypted
+            InvalidSignature
         }
 
         public ParseError ErrorType { get; set; }

@@ -3,10 +3,10 @@ using System.Text;
 
 namespace PrismLibrary.PrismData
 {
-    public struct TSIIHeader
+    public struct ScsCHeader
     {
         /// <summary>
-        /// The size of TSIIHeader in bytes.
+        /// The size of ScsCHeader in bytes.
         /// </summary>
         public const int SizeOf = 56;
             
@@ -15,16 +15,20 @@ namespace PrismLibrary.PrismData
         public byte[] InitVector; // 16 bytes
         public uint DataSize;
 
-        public static TSIIHeader DeserializeFromStream(Stream stream)
+        public static ScsCHeader DeserializeFromStream(Stream stream)
         {
-            var header = new TSIIHeader();
+            var header = new ScsCHeader();
             using var reader = new BinaryReader(stream, Encoding.UTF8, true);
 
             header.Signature = new string(reader.ReadChars(4));
-            header.HMAC = reader.ReadBytes(32);
-            header.InitVector = reader.ReadBytes(16);
-            header.DataSize = reader.ReadUInt32();
-            
+
+            if (header.Signature == "ScsC")
+            {
+                header.HMAC = reader.ReadBytes(32);
+                header.InitVector = reader.ReadBytes(16);
+                header.DataSize = reader.ReadUInt32();
+            }
+
             return header;
         }
     }

@@ -18,23 +18,28 @@ namespace PrismLibrary
         
         public static byte[] DecryptAndDecompressFile(FileStream stream)
         {
-            if (stream.Length < TSIIHeader.SizeOf)
+            if (stream.Length < 4)
                 throw new SiiFormatException(SiiFormatException.ParseError.InvalidSize);
 
             stream.Seek(0, SeekOrigin.Begin);
-            var tsiiHeader = TSIIHeader.DeserializeFromStream(stream);
+            ScsCHeader scscHeader = ScsCHeader.DeserializeFromStream(stream);
 
-            if (tsiiHeader.Signature == "SiiN") // File is not encrypted
-                throw new SiiFormatException(SiiFormatException.ParseError.NotEncrypted);
+            if (scscHeader.Signature == "SiiN") // File is not encrypted or compressed
+            {
+                stream.Position = 4;
+                byte[] bytes = new byte[stream.Length - 4];
+                stream.Read(bytes);
+                return bytes;
+            }
             
-            if (tsiiHeader.Signature != "ScsC") // ScsC is the only valid alternative.
+            if (scscHeader.Signature != "ScsC") // ScsC is the only valid alternative (binary is not supported).
                 throw new SiiFormatException(SiiFormatException.ParseError.InvalidSignature);
 
-            byte[] decryptedBytes = new byte[tsiiHeader.DataSize];
+            byte[] decryptedBytes = new byte[scscHeader.DataSize];
             
             using (Aes aes = AesManaged.Create())
             {
-                aes.IV = tsiiHeader.InitVector;
+                aes.IV = scscHeader.InitVector;
                 aes.Key = Key;
                 aes.Mode = CipherMode.CBC;
 
