@@ -11,7 +11,7 @@ namespace PrismLibrary
     public static class PrismSaveManager
     {
         private static bool listenForGameSaves;
-        private static Dictionary<GameProfile, FileSystemWatcher> gameSaveWatchers = new Dictionary<GameProfile, FileSystemWatcher>();
+        private static readonly Dictionary<GameProfile, FileSystemWatcher> GameSaveWatchers = new Dictionary<GameProfile, FileSystemWatcher>();
 
         public delegate void GameSavedEventHandler(GameSavedEventArgs eventArgs);
 
@@ -46,18 +46,18 @@ namespace PrismLibrary
                         watcher.Changed += OnSaveFileChanged;
                         watcher.Created += OnSaveFileChanged;
                         watcher.Renamed += OnSaveFileChanged;
-                        gameSaveWatchers.Add(profile, watcher);
+                        GameSaveWatchers.Add(profile, watcher);
                     }
                 }
                 else
                 {
-                    foreach (var watcher in gameSaveWatchers.Values)
+                    foreach (var watcher in GameSaveWatchers.Values)
                     {
                         watcher.EnableRaisingEvents = false;
                         watcher.Dispose();
                     }
 
-                    gameSaveWatchers.Clear();
+                    GameSaveWatchers.Clear();
                 }
             }
         }
