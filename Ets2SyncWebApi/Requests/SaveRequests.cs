@@ -15,7 +15,6 @@ namespace Ets2SyncWebApi.Requests
             selectedDlc |= 1; // api expects dlc to have 1 set
             
             var request = new RestRequest("save_upload");
-            // ReSharper disable once AccessToDisposedClosure
             request.AddFile("savefile", gameSave.FilePath);
             request.AddParameter("game", GetGameParameter(modType));
             request.AddParameter("dlc", selectedDlc);
