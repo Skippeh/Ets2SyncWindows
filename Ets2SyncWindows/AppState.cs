@@ -35,6 +35,7 @@ namespace Ets2SyncWindows
         private bool minimizeToTaskBar;
         
         private FileSystemWatcher configFileWatcher;
+        private bool backupExists;
 
         public PrismConfig GameConfig
         {
@@ -102,6 +103,17 @@ namespace Ets2SyncWindows
                 OnPropertyChanged();
 
                 ThumbnailImage = value.TryLoadThumbnailImage();
+                BackupExists = value?.DoesBackupExist() ?? false;
+            }
+        }
+
+        public bool BackupExists
+        {
+            get => backupExists;
+            set
+            {
+                backupExists = value;
+                OnPropertyChanged();
             }
         }
 

@@ -20,5 +20,13 @@ namespace Ets2SyncWindows.Controls
             if (mainWindow != null)
                 await mainWindow.SyncJobs();
         }
+
+        private async void OnRestoreBackupClicked(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = this.FindParent<MainWindow>();
+
+            if (mainWindow != null)
+                await mainWindow.RestoreBackup();
+        }
     }
 }

@@ -65,7 +65,7 @@ namespace Ets2SyncWindows
                 }
                 catch (IOException ex)
                 {
-                    AppState.MainWindow.ShowTaskBarPopup("Error", $"Could not backup save file:\n{ex.Message}", BalloonIcon.Error);
+                    ShowTaskBarPopup("Error", $"Could not backup save file:\n{ex.Message}", BalloonIcon.Error);
                     AppState.SyncingJobs = false;
                     return;
                 }
@@ -75,13 +75,14 @@ namespace Ets2SyncWindows
 
             if (syncResult.Result == ResultType.Success)
             {
-                AppState.MainWindow.ShowTaskBarPopup("Jobs Synced", "Jobs synced successfully. You can now load the save in-game.", BalloonIcon.Info);
+                ShowTaskBarPopup("Jobs Synced", "Jobs synced successfully. You can now load the save in-game.", BalloonIcon.Info);
             }
             else
             {
-                AppState.MainWindow.ShowTaskBarPopup("Error", $"Could not sync jobs:\n{syncResult.Exception.Message}", BalloonIcon.Error);
+                ShowTaskBarPopup("Error", $"Could not sync jobs:\n{syncResult.Exception.Message}", BalloonIcon.Error);
             }
-            
+
+            AppState.BackupExists = AppState.SelectedSave.DoesBackupExist();
             AppState.SyncingJobs = false;
         }
 
@@ -103,6 +104,26 @@ namespace Ets2SyncWindows
                     result |= dlc.Bitmask;
 
             return result;
+        }
+
+        public async Task<bool> RestoreBackup()
+        {
+            if (AppState.SelectedSave == null)
+                return false;
+            
+            var exception = await AppState.SelectedSave.RestoreBackup();
+
+            if (exception == null)
+            {
+                ShowTaskBarPopup("Backup Restored", "The backup was restored successfully. You can now load the save in-game.", BalloonIcon.Info);
+            }
+            else
+            {
+                ShowTaskBarPopup("Error", $"Could not restore backup.\n{exception.Message}", BalloonIcon.Error);
+            }
+            
+            AppState.BackupExists = AppState.SelectedSave.DoesBackupExist();
+            return exception == null;
         }
 
         public void SaveConfig()
