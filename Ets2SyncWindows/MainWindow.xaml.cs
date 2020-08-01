@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,6 +19,8 @@ using Ets2SyncWindows.Controls;
 using Ets2SyncWindows.Data;
 using Hardcodet.Wpf.TaskbarNotification;
 using PrismLibrary;
+using PrismSyncLibrary;
+using PrismSyncLibrary.WebEts2Sync;
 
 namespace Ets2SyncWindows
 {
@@ -48,13 +51,58 @@ namespace Ets2SyncWindows
 
         public async Task SyncJobs()
         {
-            if (AppState.SyncingJobs)
+            if (AppState.SyncingJobs || AppState.SelectedSave == null)
                 return;
 
             SaveConfig();
             AppState.SyncingJobs = true;
-            await Task.Delay(1000);
+
+            if (AppState.BackupSavesBeforeSyncing)
+            {
+                try
+                {
+                    await SaveBackupManager.BackupSave(AppState.SelectedSave);
+                }
+                catch (IOException ex)
+                {
+                    AppState.MainWindow.ShowTaskBarPopup("Error", $"Could not backup save file:\n{ex.Message}", BalloonIcon.Error);
+                    AppState.SyncingJobs = false;
+                    return;
+                }
+            }
+
+            SyncResult syncResult = await PrismSyncManager.SyncSave<WebSynchronizer>(AppState.SelectedSave, AppState.SelectedGame.ModType, GetSelectedDlcBitmask());
+
+            if (syncResult.Result == ResultType.Success)
+            {
+                AppState.MainWindow.ShowTaskBarPopup("Jobs Synced", "Jobs synced successfully. You can now load the save in-game.", BalloonIcon.Info);
+            }
+            else
+            {
+                AppState.MainWindow.ShowTaskBarPopup("Error", $"Could not sync jobs:\n{syncResult.Exception.Message}", BalloonIcon.Error);
+            }
+            
             AppState.SyncingJobs = false;
+        }
+
+        private int GetSelectedDlcBitmask()
+        {
+            int result = 0;
+            var dlcs = AppState.SelectedDlcs[AppState.SelectedGame];
+
+            foreach (Dlc dlc in dlcs.MapDlcs)
+                if (dlc.Selected)
+                    result |= dlc.Bitmask;
+            
+            foreach (Dlc dlc in dlcs.CargoDlcs)
+                if (dlc.Selected)
+                    result |= dlc.Bitmask;
+            
+            foreach (Dlc dlc in dlcs.TrailerDlcs)
+                if (dlc.Selected)
+                    result |= dlc.Bitmask;
+
+            return result;
         }
 
         public void SaveConfig()

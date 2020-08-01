@@ -1,4 +1,5 @@
 using PrismLibrary;
+using PrismSyncLibrary;
 
 namespace Ets2SyncWindows.Data
 {
@@ -6,7 +7,7 @@ namespace Ets2SyncWindows.Data
     {
         public static readonly Game[] Games =
         {
-            new Game(1, "Euro Truck Simulator 2", GameType.Ets2,
+            new Game(1, "Euro Truck Simulator 2", GameType.Ets2, GameModType.ETS2Vanilla,
 
                 MapDlc.GoingEast |
                 MapDlc.Scandinavia |
@@ -23,7 +24,7 @@ namespace Ets2SyncWindows.Data
                 TrailerDlc.Krone
             ) { UiSortOrder = 0 },
 
-            new Game(2, "American Truck Simulator", GameType.Ats,
+            new Game(2, "American Truck Simulator", GameType.Ats, GameModType.ATSVanilla,
                 MapDlc.Nevada |
                 MapDlc.Arizona |
                 MapDlc.NewMexico |
@@ -35,7 +36,7 @@ namespace Ets2SyncWindows.Data
                 CargoDlc.SpecialTransport
                 ,
                 0 /* no trailer dlcs */) { UiSortOrder = 2 },
-            new Game(3, "Euro Truck Simulator 2 (ProMods)", GameType.Ets2,
+            new Game(3, "Euro Truck Simulator 2 (ProMods)", GameType.Ets2, GameModType.ETS2ProMods,
                 0 /* no map dlcs */,
                 CargoDlc.PowerCargo |
                 CargoDlc.HeavyCargo |
