@@ -51,7 +51,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <Button Grid.Column="0" Style="{StaticResource PrimaryButton}" Click="OnSyncJobsClicked">Sync jobs (F5)</Button>
-                <Button Grid.Column="1" Style="{StaticResource WarningButton}" IsEnabled="{Binding BackupExists}" Click="OnRestoreBackupClicked">Restore Backup</Button>
+                <Button Grid.Column="1" Style="{StaticResource WarningButton}" IsEnabled="{Binding BackupExists}" Click="OnRestoreBackupClicked">Restore backup</Button>
             </Grid>
         </StackPanel>
     </Grid>
