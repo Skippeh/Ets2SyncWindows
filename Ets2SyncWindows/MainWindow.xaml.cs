@@ -55,6 +55,7 @@ namespace Ets2SyncWindows
                 return;
 
             SaveConfig();
+            PrismSaveManager.ListenForGameSaves = false;
             AppState.SyncingJobs = true;
 
             if (AppState.BackupSavesBeforeSyncing)
@@ -84,6 +85,7 @@ namespace Ets2SyncWindows
 
             AppState.BackupExists = AppState.SelectedSave.DoesBackupExist();
             AppState.SyncingJobs = false;
+            PrismSaveManager.ListenForGameSaves = true;
         }
 
         private int GetSelectedDlcBitmask()

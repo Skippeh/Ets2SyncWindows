@@ -102,7 +102,7 @@ namespace Ets2SyncWindows
                 selectedSave = value;
                 OnPropertyChanged();
 
-                ThumbnailImage = value.TryLoadThumbnailImage();
+                ThumbnailImage = value?.TryLoadThumbnailImage();
                 BackupExists = value?.DoesBackupExist() ?? false;
             }
         }
@@ -165,17 +165,6 @@ namespace Ets2SyncWindows
             {
                 automaticallySyncSaves = value;
                 OnPropertyChanged();
-
-                if (value)
-                {
-                    PrismSaveManager.GameSaved += OnGameSaved;
-                    PrismSaveManager.ListenForGameSaves = true;
-                }
-                else
-                {
-                    PrismSaveManager.GameSaved -= OnGameSaved;
-                    PrismSaveManager.ListenForGameSaves = false;
-                }
             }
         }
 
@@ -235,6 +224,9 @@ namespace Ets2SyncWindows
             {
                 SelectedDlcs.Add(game, new GameDlcs(game));
             }
+
+            PrismSaveManager.GameSaved += OnGameSaved;
+            PrismSaveManager.ListenForGameSaves = true;
         }
         
         private void InitializeConfigFileWatcher()
@@ -330,8 +322,8 @@ namespace Ets2SyncWindows
             Application.Current.Dispatcher.InvokeAsync(async () =>
             {
                 LoadingGameProfiles = true;
-                
-                SelectedProfile = GameProfiles.FirstOrDefault(profile => profile.RootFilePath.Equals(args.Profile.RootFilePath));
+
+                SelectedProfile = GameProfiles.FirstOrDefault(profile => ArePathsEqual(profile.RootFilePath, args.Profile.RootFilePath));
 
                 if (SelectedProfile == null)
                 {
@@ -364,6 +356,14 @@ namespace Ets2SyncWindows
 
                 LoadingGameProfiles = false;
             }, DispatcherPriority.Background);
+        }
+
+        private bool ArePathsEqual(string pathA, string pathB)
+        {
+            pathA = pathA.Replace("\\", "/");
+            pathB = pathB.Replace("\\", "/");
+
+            return String.Equals(pathA, pathB, StringComparison.InvariantCultureIgnoreCase);
         }
 
         #region INotifyPropertyChanged interface

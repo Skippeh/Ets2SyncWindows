@@ -34,9 +34,6 @@ namespace PrismLibrary
                     foreach (var profile in allProfiles)
                     {
                         string watchFilePath = Path.Combine(profile.RootFilePath);
-
-                        if (!Directory.Exists(watchFilePath))
-                            continue;
                         
                         var watcher = new FileSystemWatcher
                         {
@@ -45,10 +42,11 @@ namespace PrismLibrary
                             IncludeSubdirectories = true,
                             EnableRaisingEvents = true
                         };
-
+                        
                         watcher.Changed += OnSaveFileChanged;
                         watcher.Created += OnSaveFileChanged;
                         watcher.Renamed += OnSaveFileChanged;
+                        gameSaveWatchers.Add(profile, watcher);
                     }
                 }
                 else
@@ -126,7 +124,7 @@ namespace PrismLibrary
             if (!File.Exists(profileDataPath))
                 return null;
             
-            using var fileStream = File.OpenRead(profileDataPath);
+            using var fileStream = FileUtility.WaitForFile(profileDataPath, FileMode.Open, FileAccess.Read, FileShare.Read, 1000).Result;
             byte[] decryptedBytes = PrismEncryption.DecryptAndDecompressFile(fileStream);
             string bytesAsString = Encoding.UTF8.GetString(decryptedBytes);
 
@@ -177,7 +175,7 @@ namespace PrismLibrary
             if (!File.Exists(infoFilePath) || !File.Exists(gameFilePath))
                 return null;
 
-            using var fileStream = File.OpenRead(infoFilePath);
+            using var fileStream = FileUtility.WaitForFile(infoFilePath, FileMode.Open, FileAccess.Read, FileShare.Read, 1000).Result;
             byte[] bytes = PrismEncryption.DecryptAndDecompressFile(fileStream);
             string bytesAsString = Encoding.UTF8.GetString(bytes);
             var result = new GameSave
