@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
@@ -36,6 +37,8 @@ namespace Ets2SyncWindows
         
         private FileSystemWatcher configFileWatcher;
         private bool backupExists;
+
+        private readonly CancellationTokenSource backgroundThreadCancellation = new CancellationTokenSource();
 
         public PrismConfig GameConfig
         {
@@ -227,6 +230,35 @@ namespace Ets2SyncWindows
 
             PrismSaveManager.GameSaved += OnGameSaved;
             PrismSaveManager.ListenForGameSaves = true;
+
+            Task.Run(BackgroundUpdateThread);
+        }
+
+        private async Task BackgroundUpdateThread()
+        {
+            while (true)
+            {
+                if (backgroundThreadCancellation.IsCancellationRequested)
+                    break;
+
+                Stopwatch sw = Stopwatch.StartNew();
+                
+                await Application.Current.Dispatcher.InvokeAsync(() =>
+                {
+                    OnPropertyChanged(nameof(SelectedProfile));
+                    OnPropertyChanged(nameof(SelectedSave));
+                });
+
+                sw.Stop();
+
+                if (sw.ElapsedMilliseconds < 1000)
+                    await Task.Delay(TimeSpan.FromMilliseconds(1000).Subtract(sw.Elapsed), backgroundThreadCancellation.Token);
+            }
+        }
+
+        ~AppState()
+        {
+            backgroundThreadCancellation.Cancel();
         }
         
         private void InitializeConfigFileWatcher()
