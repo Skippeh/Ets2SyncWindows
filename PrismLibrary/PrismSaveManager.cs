@@ -216,7 +216,7 @@ namespace PrismLibrary
                     result.SaveTime = TimeUtility.EpochToDateTime(long.Parse(kv.Value));
             }
 
-            if (result.Name.ToLower().Contains("@@noname_save_game@@") || string.IsNullOrEmpty(result.Name))
+            if (result.Name.Contains("@@noname_save_game@@") || string.IsNullOrEmpty(result.Name))
             {
                 string saveName = "Unnamed save";
 
@@ -229,7 +229,10 @@ namespace PrismLibrary
                     saveName = "Autosave";
                 }
 
-                result.Name = saveName;
+                if (result.Name.Contains("@@noname_save_game@@"))
+                    result.Name = result.Name.Replace("@@noname_save_game@@", saveName);
+                else
+                    result.Name = saveName;
             }
 
             return result;
