@@ -1,5 +1,6 @@
 using System.IO;
 using System.Security.Cryptography;
+using System.Text;
 using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 using PrismLibrary.Exceptions;
 using PrismLibrary.PrismData;
@@ -22,18 +23,22 @@ namespace PrismLibrary
                 throw new SiiFormatException(SiiFormatException.ParseError.InvalidSize);
 
             stream.Seek(0, SeekOrigin.Begin);
-            ScsCHeader scscHeader = ScsCHeader.DeserializeFromStream(stream);
 
-            if (scscHeader.Signature == "SiiN") // File is not encrypted or compressed
+            using var binaryReader = new BinaryReader(stream, Encoding.UTF8, true);
+            var signatureChars = binaryReader.ReadChars(4);
+            string signature = new string(signatureChars);
+            
+            if (signature == "SiiN") // File is not encrypted or compressed
             {
-                stream.Position = 4;
                 byte[] bytes = new byte[stream.Length - 4];
-                stream.Read(bytes);
+                binaryReader.ReadBytes(bytes.Length);
                 return bytes;
             }
             
-            if (scscHeader.Signature != "ScsC") // ScsC is the only valid alternative (binary is not supported).
+            if (signature != "ScsC") // ScsC is the only valid alternative (binary is not supported).
                 throw new SiiFormatException(SiiFormatException.ParseError.InvalidSignature);
+            
+            ScsCHeader scscHeader = ScsCHeader.DeserializeFromStream(stream);
 
             byte[] decryptedBytes = new byte[scscHeader.DataSize];
             
