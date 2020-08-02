@@ -30,8 +30,7 @@ namespace PrismLibrary
             
             if (signature == "SiiN") // File is not encrypted or compressed
             {
-                byte[] bytes = new byte[stream.Length - 4];
-                binaryReader.ReadBytes(bytes.Length);
+                byte[] bytes = binaryReader.ReadBytes((int) stream.Length - 4);
                 return bytes;
             }
             
