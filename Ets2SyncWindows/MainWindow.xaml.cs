@@ -20,6 +20,7 @@ using Ets2SyncWindows.Data;
 using Hardcodet.Wpf.TaskbarNotification;
 using PrismLibrary;
 using PrismSyncLibrary;
+using PrismSyncLibrary.OfflineSync;
 using PrismSyncLibrary.WebEts2Sync;
 
 namespace Ets2SyncWindows
@@ -72,7 +73,7 @@ namespace Ets2SyncWindows
                 }
             }
 
-            SyncResult syncResult = await PrismSyncManager.SyncSave<WebSynchronizer>(AppState.SelectedSave, AppState.SelectedGame.ModType, GetSelectedDlcBitmask());
+            SyncResult syncResult = await PrismSyncManager.SyncSave<OfflineSynchronizer>(AppState.SelectedSave, AppState.SelectedGame.ModType, GetSelectedDlcBitmask());
 
             if (syncResult.Result == ResultType.Success)
             {

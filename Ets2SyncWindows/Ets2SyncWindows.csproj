@@ -97,6 +97,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\PrismLibrary\PrismLibrary.csproj" />
+      <ProjectReference Include="..\PrismSyncLibrary.OfflineSync\PrismSyncLibrary.OfflineSync.csproj" />
       <ProjectReference Include="..\PrismSyncLibrary.WebEts2Sync\PrismSyncLibrary.WebEts2Sync.csproj" />
       <ProjectReference Include="..\PrismSyncLibrary\PrismSyncLibrary.csproj" />
     </ItemGroup>
