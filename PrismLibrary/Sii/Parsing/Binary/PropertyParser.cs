@@ -121,11 +121,6 @@ namespace PrismLibrary.Sii.Parsing.Binary
                     var triple = ((float, float, float)) ReadValue(reader, PropertyType.FloatTriple);
                     byte[] unknown = reader.ReadBytes(4);
                     var quad = ((float, float, float, float)) ReadValue(reader, PropertyType.FloatQuad);
-
-                    Console.WriteLine("FloatTripleQuad:");
-                    Console.WriteLine($"Values: ({triple.Item1}, {triple.Item2}, {triple.Item3}) {quad.Item1}, {quad.Item2}, {quad.Item3}, {quad.Item4}");
-                    Console.WriteLine($"Unknown bytes: 0x{unknown[0]:X}, 0x{unknown[1]:X}, 0x{unknown[2]:X}");
-                    Console.WriteLine();
                     
                     return (triple, quad);
                 }
