@@ -11,7 +11,7 @@ namespace PrismLibrary.Sii
 
         public override string ToString()
         {
-            return Name;
+            return $"{Type.Name} : {Name}";
         }
     }
 }
