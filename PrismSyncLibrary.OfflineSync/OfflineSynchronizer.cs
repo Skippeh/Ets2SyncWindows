@@ -1,9 +1,11 @@
 using System;
 using System.IO;
-using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using PrismLibrary;
+using PrismLibrary.Sii;
+using PrismLibrary.Sii.Parsing;
+using PrismLibrary.Sii.Parsing.Binary;
 
 namespace PrismSyncLibrary.OfflineSync
 {
@@ -11,19 +13,28 @@ namespace PrismSyncLibrary.OfflineSync
     {
         public async Task<SyncResult> SyncJobsAsync(GameSave gameSave, GameModType modType, int selectedDlc)
         {
-            string siiText;
-            
             using (var file = File.OpenRead(gameSave.FilePath))
             {
                 var bytes = PrismEncryption.DecryptAndDecompressFile(file);
-                siiText = Encoding.UTF8.GetString(bytes);
-
-                await File.WriteAllTextAsync(Path.ChangeExtension(gameSave.FilePath, ".sii.raw.txt"), siiText);
+                await File.WriteAllBytesAsync(Path.ChangeExtension(gameSave.FilePath, ".sii.raw.bin"), bytes);
             }
 
-            
+            if (File.Exists(Path.ChangeExtension(gameSave.FilePath, ".sii.0")))
+            {
+                using (var file = File.OpenRead(Path.ChangeExtension(gameSave.FilePath, ".sii.0")))
+                {
+                    var bytes = PrismEncryption.DecryptAndDecompressFile(file);
+                    string siiText = Encoding.UTF8.GetString(bytes);
+                    await File.WriteAllTextAsync(Path.ChangeExtension(gameSave.FilePath, ".sii.raw.txt"), siiText);
+                }
+            }
 
-            throw new NotImplementedException("Not implemented");
+            using var saveStream = File.OpenRead(gameSave.FilePath);
+            var siiBytes = PrismEncryption.DecryptAndDecompressFile(saveStream);
+            using var memoryStream = new MemoryStream(siiBytes);
+            SIIFile siiFile = SiiParsing.ParseStream<BinarySIIParser>(memoryStream);
+
+            throw new NotImplementedException();
         }
     }
 }
