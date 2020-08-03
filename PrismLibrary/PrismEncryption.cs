@@ -35,7 +35,7 @@ namespace PrismLibrary
                 return bytes;
             }
             
-            if (signature != "ScsC") // ScsC is the only valid alternative (binary is not supported).
+            if (signature != "ScsC") // ScsC is the only valid alternative
                 throw new SiiFormatException(SiiFormatException.ParseError.InvalidSignature);
             
             ScsCHeader scscHeader = ScsCHeader.DeserializeFromStream(stream);
