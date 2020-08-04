@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
@@ -53,13 +54,15 @@ namespace PrismLibrary
                 cryptoStream.Read(decryptedBytes);
             }
 
-            using (var outputMemoryStream = new MemoryStream())
+            using (var outputMemoryStream = new MemoryStream(decryptedBytes.Length * 2))
             using (var memoryStream = new MemoryStream(decryptedBytes))
             using (var inflater = new InflaterInputStream(memoryStream))
             {
                 inflater.CopyTo(outputMemoryStream);
 
                 byte[] decompressedBytes = outputMemoryStream.ToArray();
+
+                GC.Collect(); // Force garbage collection due to the potentially high amounts of memory used above
                 return decompressedBytes;
             }
         }
