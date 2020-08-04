@@ -10,6 +10,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using PrismLibrary.Sii.Parsing.Binary.DataTypes;
 using PrismLibrary.Sii.Parsing.Binary.Exceptions;
+using PrismLibrary.Sii.Serializing.Binary;
 
 namespace PrismLibrary.Sii.Parsing.Binary
 {
@@ -36,7 +37,7 @@ namespace PrismLibrary.Sii.Parsing.Binary
             var header = reader.ReadStructure<FileHeader>();
 
             if (new string(header.Signature) != "BSII")
-                throw new SiiBinaryFormatException($"The save file is not binary. Signature = {new string(header.Signature)}");
+                throw new SiiBinaryFormatException($"The file format is not binary. Signature = {new string(header.Signature)}");
 
             ReadUnitDeclarationHeaders();
             var units = ReadUnits();
@@ -192,13 +193,13 @@ namespace PrismLibrary.Sii.Parsing.Binary
 
                     for (int i = 0; i < count; ++i)
                     {
-                        var unknownHeader = reader.ReadStructure<MaybeKeyValueHeader>();
+                        var keyValueHeader = reader.ReadStructure<MaybeKeyValueHeader>();
 
-                        string name = new string(reader.ReadChars(unknownHeader.NameLength));
+                        string name = new string(reader.ReadChars(keyValueHeader.NameLength));
                         types.Add(new MaybeKeyValue
                         {
                             Name = name,
-                            Value = unknownHeader.Value
+                            Value = keyValueHeader.Value
                         });
                     }
 
@@ -286,22 +287,17 @@ namespace PrismLibrary.Sii.Parsing.Binary
 
         internal static string DecodeToken(ulong token)
         {
+            ulong originalToken = token;
             StringBuilder builder = new StringBuilder(12, 12);
 
             while (token > 0)
             {
-                char currentChar = (char) (token % 38);
+                byte charIndex = (byte) (token % 38);
 
-                if (currentChar == 0)
-                    throw new SiiBinaryFormatException($"Invalid character in decoded token, Token = {token}");
+                if (charIndex == 0 || charIndex >= BinarySIISerializer.ValidTokenCharacters.Length)
+                    throw new SiiBinaryFormatException($"Invalid character in decoded token, Token = {originalToken}, charIndex = {charIndex}");
 
-                if (currentChar <= 10)
-                    currentChar += (char) ('0' - 1);
-                else if (currentChar <= 36)
-                    currentChar += (char) ('a' - 11);
-                else
-                    currentChar = '_';
-
+                char currentChar = BinarySIISerializer.ValidTokenCharacters[charIndex];
                 builder.Append(currentChar);
                 token /= 38;
             }

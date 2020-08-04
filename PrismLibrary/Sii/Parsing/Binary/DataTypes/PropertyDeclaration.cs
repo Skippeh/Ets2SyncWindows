@@ -11,6 +11,7 @@ namespace PrismLibrary.Sii.Parsing.Binary.DataTypes
     
     public enum PropertyType
     {
+        // ReSharper disable InconsistentNaming
         Invalid,
         String,
         StringArray,
@@ -25,11 +26,13 @@ namespace PrismLibrary.Sii.Parsing.Binary.DataTypes
         Int32Triple,
         Int32TripleArray,
         FloatQuadArray,
-        FloatTripleQuad, // Not a quad of triples, but a triple followed by four bytes (?) followed by a quad
+        FloatTripleQuad, // Not a quad of triples, but a triple followed by four bytes (garbage) followed by a quad
         FloatTripleQuadArray,
         Int32,
         Uint32,
         Uint32Array,
+        Uint32_2,
+        Uint32Array_2,
         Uint16,
         Uint16Array,
         Int64,
@@ -40,5 +43,9 @@ namespace PrismLibrary.Sii.Parsing.Binary.DataTypes
         MaybeKeyValueArray,
         Unit,
         UnitArray,
+        Unit_2,
+        UnitArray_2,
+        Unit_3
+        // ReSharper restore InconsistentNaming
     }
 }

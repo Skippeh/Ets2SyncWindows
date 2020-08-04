@@ -10,7 +10,7 @@ namespace PrismLibrary.Sii.Parsing.Binary.DataTypes
         
         public int Flag;
         public int Format;
-        public char Index1;
+        public byte Index1;
         public int Index2;
         public int NameLength;
         

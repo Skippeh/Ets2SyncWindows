@@ -6,6 +6,8 @@ using PrismLibrary;
 using PrismLibrary.Sii;
 using PrismLibrary.Sii.Parsing;
 using PrismLibrary.Sii.Parsing.Binary;
+using PrismLibrary.Sii.Serializing;
+using PrismLibrary.Sii.Serializing.Binary;
 
 namespace PrismSyncLibrary.OfflineSync
 {
@@ -34,6 +36,11 @@ namespace PrismSyncLibrary.OfflineSync
             using var memoryStream = new MemoryStream(siiBytes);
             SIIFile siiFile = SiiParsing.ParseStream<BinarySIIParser>(memoryStream);
 
+            using (var file = File.Create(Path.ChangeExtension(gameSave.FilePath, ".sii.raw.bin.serialized")))
+            {
+                SiiSerializing.SerializeSiiFile<BinarySIISerializer>(siiFile, file);
+            }
+            
             throw new NotImplementedException();
         }
     }

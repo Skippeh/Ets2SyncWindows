@@ -31,6 +31,7 @@ namespace PrismLibrary.Sii.Parsing.Binary
             {
                 case PropertyType.Uint16:
                 case PropertyType.Uint32:
+                case PropertyType.Uint32_2:
                 case PropertyType.Uint64:
                 case PropertyType.Int32:
                 case PropertyType.Int64:
@@ -39,6 +40,8 @@ namespace PrismLibrary.Sii.Parsing.Binary
                 case PropertyType.Int32Triple:
                 case PropertyType.Token:
                 case PropertyType.Unit:
+                case PropertyType.Unit_2:
+                case PropertyType.Unit_3:
                 case PropertyType.String:
                 case PropertyType.Float:
                 case PropertyType.FloatDual:
@@ -52,19 +55,26 @@ namespace PrismLibrary.Sii.Parsing.Binary
                 case PropertyType.TokenArray:
                 case PropertyType.Int32TripleArray:
                 case PropertyType.Uint32Array:
+                case PropertyType.Uint32Array_2:
                 case PropertyType.Uint16Array:
                 case PropertyType.Int64Array:
                 case PropertyType.BooleanArray:
                 case PropertyType.UnitArray:
+                case PropertyType.UnitArray_2:
                 case PropertyType.StringArray:
                 case PropertyType.FloatArray:
                 case PropertyType.FloatQuadArray:
                 case PropertyType.FloatTripleQuadArray:
                 case PropertyType.MaybeKeyValueArray:
                 {
-                    var arrayPropertyType = PropertyDeclarationHeader.PropertyArrayTypesByPropertyType[(int) type];
+                    if (!PropertyDeclarationHeader.PropertyArrayTypesByPropertyType.TryGetValue(type, out var arrayPropertyType))
+                        throw new SiiBinaryFormatException($"There is no known property type for array type '{type}'");
+
                     uint count = reader.ReadUInt32();
                     List<object> values = new List<object>();
+
+                    if (count > 0 && type == PropertyType.MaybeKeyValueArray)
+                        throw new NotImplementedException($"Unimplemented case: MaybeKeyValueArray Count > 0 (count = {count})");
 
                     if (arrayPropertyType == PropertyType.Invalid)
                         throw new SiiBinaryFormatException($"Unknown value property array type = {type}");
@@ -94,7 +104,9 @@ namespace PrismLibrary.Sii.Parsing.Binary
             {
                 case PropertyType.Uint16: return reader.ReadInt16();
                 case PropertyType.Int32: return reader.ReadInt32();
-                case PropertyType.Uint32: return reader.ReadUInt32();
+                case PropertyType.Uint32:
+                case PropertyType.Uint32_2:
+                    return reader.ReadUInt32();
                 case PropertyType.Int64: return reader.ReadUInt64();
                 case PropertyType.Uint64: return reader.ReadUInt64();
                 case PropertyType.Boolean: return reader.ReadBoolean();
@@ -110,7 +122,10 @@ namespace PrismLibrary.Sii.Parsing.Binary
                 {
                     return BinarySIIParser.DecodeToken(reader.ReadUInt64());
                 }
-                case PropertyType.Unit: return BinarySIIParser.ReadUnitName(reader);
+                case PropertyType.Unit:
+                case PropertyType.Unit_2: 
+                case PropertyType.Unit_3:
+                    return BinarySIIParser.ReadUnitName(reader);
                 case PropertyType.FloatDual: return (reader.ReadSingle(), reader.ReadSingle());
                 case PropertyType.FloatTriple: return (reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                 case PropertyType.Uint32Triple: return (reader.ReadUInt32(), reader.ReadUInt32(), reader.ReadUInt32());
@@ -126,11 +141,11 @@ namespace PrismLibrary.Sii.Parsing.Binary
                 }
                 case PropertyType.MaybeKeyValueArray:
                 {
-                    break;
+                    throw new NotImplementedException("MaybeKeyValueArray impl missing");
                 }
             }
 
-            throw new NotImplementedException($"Unknown type = {type}");
+            throw new NotImplementedException($"Unknown property type = {type}");
         }
     }
 }
