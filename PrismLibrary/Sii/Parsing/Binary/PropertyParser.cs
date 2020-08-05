@@ -22,7 +22,7 @@ namespace PrismLibrary.Sii.Parsing.Binary
             return properties;
         }
 
-        private static PropertyValue ReadProperty(BinaryReader reader, PropertyType type, string propertyName, bool isArrayMember = false, uint arrayIndex = 0)
+        private static PropertyValue ReadProperty(BinaryReader reader, PropertyType type, string propertyName)
         {
             var name = propertyName;
             object value;
@@ -81,7 +81,7 @@ namespace PrismLibrary.Sii.Parsing.Binary
 
                     for (uint i = 0; i < count; ++i)
                     {
-                        values.Add(ReadProperty(reader, arrayPropertyType, null, true, i).Value);
+                        values.Add(ReadProperty(reader, arrayPropertyType, null).Value);
                     }
 
                     value = values;
