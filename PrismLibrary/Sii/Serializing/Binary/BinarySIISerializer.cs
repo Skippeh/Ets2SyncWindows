@@ -14,6 +14,10 @@ namespace PrismLibrary.Sii.Serializing.Binary
         private BinaryWriter writer;
         private Stream stream;
         private SIIFile file;
+
+        internal BinarySIISerializer()
+        {
+        }
         
         public void WriteToStream(SIIFile file, Stream outputStream)
         {
@@ -30,8 +34,7 @@ namespace PrismLibrary.Sii.Serializing.Binary
             writer.WriteStructure(fileHeader);
             WriteUnitDeclarationHeaders();
             WriteUnits();
-            
-            throw new System.NotImplementedException();
+            writer.Write((byte) 0); // 0 at the eof
         }
 
         private void WriteUnitDeclarationHeaders()
@@ -103,14 +106,14 @@ namespace PrismLibrary.Sii.Serializing.Binary
             foreach (SiiUnit unit in file.Units)
             {
                 writer.Write(unit.Type.Index);
-                WriteUnitName(unit.Name);
-                PropertySerializer.SerializeProperties(writer, unit.Properties);
+                WriteUnitName(writer, unit.Name);
+                PropertySerializer.SerializeUnitProperties(writer, unit);
             }
 
-            throw new NotImplementedException("WriteUnits not implemented");
+            writer.Write(0); // signifies end of units
         }
 
-        private void WriteUnitName(string name)
+        internal static void WriteUnitName(BinaryWriter writer, string name)
         {
             if (name == null)
             {
@@ -153,7 +156,7 @@ namespace PrismLibrary.Sii.Serializing.Binary
 
         internal static readonly char[] ValidTokenCharacters = "\00123456789abcdefghijklmnopqrstuvwxyz_".ToCharArray();
 
-        public static ulong EncodeToken(string token)
+        internal static ulong EncodeToken(string token)
         {
             if (token.Length > 12)
                 throw new SiiBinaryFormatException($"Token length > 12 (token = '{token}')");

@@ -102,12 +102,15 @@ namespace PrismLibrary.Sii.Parsing.Binary
                     switch (propertyValue.Type)
                     {
                         case PropertyType.Unit:
+                        case PropertyType.Unit_2:
+                        case PropertyType.Unit_3:
                         {
                             value = FindUnit((string) propertyValue.Value);
 
                             break;
                         }
                         case PropertyType.UnitArray:
+                        case PropertyType.UnitArray_2:
                         {
                             var list = new List<SiiUnit>();
                             value = list;
@@ -223,7 +226,7 @@ namespace PrismLibrary.Sii.Parsing.Binary
             {
                 int declarationIndex = reader.ReadInt32();
 
-                if (declarationIndex == 0) // no more properties for this unit
+                if (declarationIndex == 0) // no more units in the file
                     break;
 
                 if (!unitDeclarations.TryGetValue(declarationIndex, out UnitDeclaration unitDeclaration))
