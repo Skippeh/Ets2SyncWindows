@@ -127,7 +127,8 @@ namespace PrismLibrary.Sii.Parsing.Binary
                     return new SiiProperty
                     {
                         Name = propertyValue.Name,
-                        Value = value
+                        Value = value,
+                        Type = propertyValue.Type
                     };
                 }).ToList();
             }
