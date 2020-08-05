@@ -58,11 +58,11 @@ namespace PrismLibrary.Sii.Parsing.Binary
         public static void WriteCharString(this BinaryWriter writer, string val, bool writeLength = false)
         {
             if (writeLength)
-                writer.Write(val.Length);
+                writer.Write((uint) val.Length);
 
             foreach (char ch in val)
             {
-                writer.Write(ch);
+                writer.Write((byte) ch);
             }
         }
     }
