@@ -42,7 +42,9 @@ namespace PrismLibrary.Sii.Parsing.Binary
             ReadUnitDeclarationHeaders();
             var units = ReadUnits();
 
-            if (stream.Position != stream.Length - 1)
+            reader.ReadByte(); // 0 at the eof
+
+            if (stream.Position != stream.Length)
                 throw new NotImplementedException("Reached end of parsing but not the end of stream");
 
             stream = null;
