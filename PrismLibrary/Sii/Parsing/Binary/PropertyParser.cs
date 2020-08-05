@@ -102,12 +102,12 @@ namespace PrismLibrary.Sii.Parsing.Binary
         {
             switch (type)
             {
-                case PropertyType.Uint16: return reader.ReadInt16();
+                case PropertyType.Uint16: return reader.ReadUInt16();
                 case PropertyType.Int32: return reader.ReadInt32();
                 case PropertyType.Uint32:
                 case PropertyType.Uint32_2:
                     return reader.ReadUInt32();
-                case PropertyType.Int64: return reader.ReadUInt64();
+                case PropertyType.Int64: return reader.ReadInt64();
                 case PropertyType.Uint64: return reader.ReadUInt64();
                 case PropertyType.Boolean: return reader.ReadBoolean();
                 case PropertyType.Float: return reader.ReadSingle();
