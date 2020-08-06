@@ -131,16 +131,15 @@ namespace PrismLibrary.Sii.Parsing.Text
             return Text[position + offset];
         }
 
-        private string PeekChars(int numChars, int offset = 0)
+        private bool PeekEquals(in string chars, int offset = 0)
         {
-            var builder = new StringBuilder();
-            
-            for (int i = 0; i < numChars; ++i)
+            for (int i = 0; i < chars.Length; ++i)
             {
-                builder.Append(PeekChar(offset + i));
+                if (PeekChar(offset + i) != chars[i])
+                    return false;
             }
 
-            return builder.ToString();
+            return true;
         }
 
         private string ReadUntil(char ch, bool appendChar = false, bool includeWhiteSpace = false)
@@ -195,16 +194,16 @@ namespace PrismLibrary.Sii.Parsing.Text
 
         private void SkipBlockComment()
         {
-            if (PeekChars(2) == "/*")
+            if (PeekEquals("/*"))
             {
                 SkipChars(2);
-                SkipWhile(ch => PeekChars(2) != "*/");
+                SkipWhile(ch => !PeekEquals("*/"));
             }
         }
 
         private void SkipLineComment()
         {
-            if (PeekChars(2) == "//")
+            if (PeekEquals("//"))
             {
                 SkipWhile(ch => ch != '\n');
                 SkipChars(1); // skip \n
@@ -218,7 +217,7 @@ namespace PrismLibrary.Sii.Parsing.Text
 
         private Token TryLexRoot(in char ch)
         {
-            if (PeekChars(4) == "unit" && position == 0)
+            if (PeekEquals("unit") && position == 0)
             {
                 SkipChars(4);
                 return new Token(TokenType.RootUnitDeclaration, "unit");
@@ -251,13 +250,14 @@ namespace PrismLibrary.Sii.Parsing.Text
             return null;
         }
 
+        private static readonly char[] ValidNumberChars = "0123456789".ToCharArray();
+        private static readonly char[] ValidNumberPunctuators = ".".ToCharArray();
+        private static readonly char[] ValidHexChars = "&abcdef".ToCharArray();
+        
         private Token TryLexNumber(in char ch)
         {
             var builder = new StringBuilder();
-
-            char[] validChars = "0123456789".ToCharArray();
-            char[] validPunctuators = ".".ToCharArray();
-            char[] validHexChars = "&abcdef".ToCharArray();
+            
             bool isHex = ch == '&';
 
             int offset = 0;
@@ -265,7 +265,7 @@ namespace PrismLibrary.Sii.Parsing.Text
             {
                 char currentChar = char.ToLowerInvariant(PeekChar(offset++));
 
-                if (validChars.Contains(currentChar) || (offset > 0 && validPunctuators.Contains(currentChar)) || isHex && validHexChars.Contains(currentChar))
+                if (ValidNumberChars.Contains(currentChar) || (offset > 0 && ValidNumberPunctuators.Contains(currentChar)) || isHex && ValidHexChars.Contains(currentChar))
                 {
                     builder.Append(currentChar);
                 }
@@ -280,7 +280,7 @@ namespace PrismLibrary.Sii.Parsing.Text
                 string numberString = builder.ToString();
                 object value;
 
-                if (numberString.Contains("&") || numberString.Contains("."))
+                if (numberString.Contains('&') || numberString.Contains('.'))
                 {
                     if (numberString.StartsWith('&'))
                     {
@@ -288,7 +288,7 @@ namespace PrismLibrary.Sii.Parsing.Text
                         value = BitConverter.ToSingle(bytes);
                     }
                     else
-                        value = double.Parse(numberString, CultureInfo.InvariantCulture);
+                        value = float.Parse(numberString, CultureInfo.InvariantCulture);
                 }
                 else
                 {
@@ -306,7 +306,7 @@ namespace PrismLibrary.Sii.Parsing.Text
         {
             foreach (var kv in Literals)
             {
-                if (PeekChars(kv.Key.Length) == kv.Key)
+                if (PeekEquals(kv.Key))
                 {
                     SkipChars(kv.Key.Length);
 
