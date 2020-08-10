@@ -163,56 +163,56 @@ namespace PrismLibrary.Sii.Serializing.Binary
                 }
                 case PropertyType.FloatDual:
                 {
-                    var tuple = ((float, float)) value;
-                    writer.Write(tuple.Item1);
-                    writer.Write(tuple.Item2);
+                    var tuple = (Vector2) value;
+                    writer.Write(tuple.X);
+                    writer.Write(tuple.Y);
                     break;
                 }
                 case PropertyType.FloatTriple:
                 {
-                    var tuple = ((float, float, float)) value;
-                    writer.Write(tuple.Item1);
-                    writer.Write(tuple.Item2);
-                    writer.Write(tuple.Item3);
+                    var tuple = (Vector3) value;
+                    writer.Write(tuple.X);
+                    writer.Write(tuple.Y);
+                    writer.Write(tuple.Z);
                     break;
                 }
                 case PropertyType.Uint32Triple:
                 {
-                    var tuple = ((uint, uint, uint)) value;
-                    writer.Write(tuple.Item1);
-                    writer.Write(tuple.Item2);
-                    writer.Write(tuple.Item3);
+                    var tuple = (Vector3Uint) value;
+                    writer.Write(tuple.X);
+                    writer.Write(tuple.Y);
+                    writer.Write(tuple.Z);
                     break;
                 }
                 case PropertyType.Int32Triple:
                 {
-                    var tuple = ((int, int, int)) value;
-                    writer.Write(tuple.Item1);
-                    writer.Write(tuple.Item2);
-                    writer.Write(tuple.Item3);
+                    var tuple = (Vector3Int) value;
+                    writer.Write(tuple.X);
+                    writer.Write(tuple.Y);
+                    writer.Write(tuple.Z);
                     break;
                 }
                 case PropertyType.FloatQuad:
                 {
-                    var tuple = ((float, float, float, float)) value;
-                    writer.Write(tuple.Item1);
-                    writer.Write(tuple.Item2);
-                    writer.Write(tuple.Item3);
-                    writer.Write(tuple.Item4);
+                    var tuple = (Vector4) value;
+                    writer.Write(tuple.X);
+                    writer.Write(tuple.Y);
+                    writer.Write(tuple.Z);
+                    writer.Write(tuple.W);
                     break;
                 }
                 case PropertyType.FloatTripleQuad:
                 {
-                    var tripleQuad = (((float, float, float), (float, float, float, float))) value;
+                    var tripleQuad = ((Vector3, Vector4)) value;
 
-                    writer.Write(tripleQuad.Item1.Item1);
-                    writer.Write(tripleQuad.Item1.Item2);
-                    writer.Write(tripleQuad.Item1.Item3);
+                    writer.Write(tripleQuad.Item1.X);
+                    writer.Write(tripleQuad.Item1.Y);
+                    writer.Write(tripleQuad.Item1.Z);
                     writer.Write(uint.MaxValue); // write 4 "garbage" bytes
-                    writer.Write(tripleQuad.Item2.Item1);
-                    writer.Write(tripleQuad.Item2.Item2);
-                    writer.Write(tripleQuad.Item2.Item3);
-                    writer.Write(tripleQuad.Item2.Item4);
+                    writer.Write(tripleQuad.Item2.X);
+                    writer.Write(tripleQuad.Item2.Y);
+                    writer.Write(tripleQuad.Item2.Z);
+                    writer.Write(tripleQuad.Item2.W);
                     break;
                 }
                 case PropertyType.MaybeKeyValueArray:

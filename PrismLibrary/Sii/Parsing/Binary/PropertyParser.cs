@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Numerics;
 using PrismLibrary.Sii.Parsing.Binary.DataTypes;
 using PrismLibrary.Sii.Parsing.Binary.Exceptions;
 
@@ -118,24 +116,21 @@ namespace PrismLibrary.Sii.Parsing.Binary
                     string outString = new string(chars);
                     return outString;
                 }
-                case PropertyType.Token:
-                {
-                    return BinarySIIParser.DecodeToken(reader.ReadUInt64());
-                }
+                case PropertyType.Token: return BinarySIIParser.DecodeToken(reader.ReadUInt64());
                 case PropertyType.Unit:
                 case PropertyType.Unit_2: 
                 case PropertyType.Unit_3:
                     return BinarySIIParser.ReadUnitName(reader);
-                case PropertyType.FloatDual: return (reader.ReadSingle(), reader.ReadSingle());
-                case PropertyType.FloatTriple: return (reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                case PropertyType.Uint32Triple: return (reader.ReadUInt32(), reader.ReadUInt32(), reader.ReadUInt32());
-                case PropertyType.Int32Triple: return (reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32());
-                case PropertyType.FloatQuad: return (reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                case PropertyType.FloatDual: return new Vector2(reader.ReadSingle(), reader.ReadSingle());
+                case PropertyType.FloatTriple: return new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                case PropertyType.Uint32Triple: return new Vector3Uint(reader.ReadUInt32(), reader.ReadUInt32(), reader.ReadUInt32());
+                case PropertyType.Int32Triple: return new Vector3Int(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32());
+                case PropertyType.FloatQuad: return new Vector4(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                 case PropertyType.FloatTripleQuad:
                 {
-                    var triple = ((float, float, float)) ReadValue(reader, PropertyType.FloatTriple);
+                    var triple = (Vector3) ReadValue(reader, PropertyType.FloatTriple);
                     byte[] unknown = reader.ReadBytes(4);
-                    var quad = ((float, float, float, float)) ReadValue(reader, PropertyType.FloatQuad);
+                    var quad = (Vector4) ReadValue(reader, PropertyType.FloatQuad);
                     
                     return (triple, quad);
                 }

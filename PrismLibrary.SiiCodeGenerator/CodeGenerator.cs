@@ -157,28 +157,27 @@ namespace PrismLibrary.SiiCodeGenerator
                 }
                 case PropertyType.FloatDual:
                 {
-                    // todo: implement real vector classes
-                    return SyntaxFactory.ParseTypeName("(float X, float Y)");
+                    return SyntaxFactory.ParseTypeName("Vector2");
                 }
                 case PropertyType.FloatTriple:
                 {
-                    return SyntaxFactory.ParseTypeName("(float X, float Y, float Z)");
+                    return SyntaxFactory.ParseTypeName("Vector3");
                 }
                 case PropertyType.FloatQuad:
                 {
-                    return SyntaxFactory.ParseTypeName("(float X, float Y, float Z, float W)");
+                    return SyntaxFactory.ParseTypeName("Vector4");
                 }
                 case PropertyType.FloatTripleQuad:
                 {
-                    return SyntaxFactory.ParseTypeName("((float X, float Y, float Z), (float X, float Y, float Z, float W))");
+                    return SyntaxFactory.ParseTypeName("(Vector3, Vector4)");
                 }
                 case PropertyType.Int32Triple:
                 {
-                    return SyntaxFactory.ParseTypeName("(int X, int Y, int Z)");
+                    return SyntaxFactory.ParseTypeName("Vector3Int");
                 }
                 case PropertyType.Uint32Triple:
                 {
-                    return SyntaxFactory.ParseTypeName("(uint X, uint Y, uint Z)");
+                    return SyntaxFactory.ParseTypeName("Vector3Uint");
                 }
                 default:
                 {
