@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
 using CommandLine;
+using Newtonsoft.Json;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
@@ -15,7 +17,9 @@ namespace PrismLibrary.SiiCodeGenerator
 {
     internal static class Program
     {
-        static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        public static ReadOnlyDictionary<string, string> CustomPropertyTypes;
+        
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         
         private static Task<int> Main(string[] args)
         {
@@ -30,6 +34,7 @@ namespace PrismLibrary.SiiCodeGenerator
             logConfig.AddRule(LogLevel.Trace, LogLevel.Fatal, consoleTarget);
             LogManager.Configuration = logConfig;
 
+            LoadCustomPropertyDeclarations();
             
             return Task.Run<int>(async () =>
             {
@@ -58,7 +63,7 @@ namespace PrismLibrary.SiiCodeGenerator
                         {
                             string filePath = Path.Combine(args.OutputDirPath, $"{FormatUtility.ConvertToCamelCase(classResult.Item1.Name)}.generated.cs");
 
-                            using var fileStream = File.CreateText(filePath);
+                            await using var fileStream = File.CreateText(filePath);
                             await fileStream.WriteAsync(classResult.Item2);
                         }));
                     }
@@ -77,6 +82,19 @@ namespace PrismLibrary.SiiCodeGenerator
 
                 return 0;
             });
+        }
+
+        private static void LoadCustomPropertyDeclarations()
+        {
+            if (!File.Exists("PropertyTypes.json"))
+            {
+                CustomPropertyTypes = new ReadOnlyDictionary<string, string>(new Dictionary<string, string>());
+                return;
+            }
+
+            var fileContents = File.ReadAllText("PropertyTypes.json");
+            var loadedDeclarations = JsonConvert.DeserializeObject<Dictionary<string, string>>(fileContents);
+            CustomPropertyTypes = new ReadOnlyDictionary<string, string>(loadedDeclarations);
         }
     }
 

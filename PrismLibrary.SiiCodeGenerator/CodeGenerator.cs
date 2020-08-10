@@ -250,9 +250,15 @@ namespace PrismLibrary.SiiCodeGenerator
                         return typeName;
                     }
                 }
+                
+                if (Program.CustomPropertyTypes.TryGetValue($"{unitDeclaration.Name}.{propDeclaration.Name}", out string propTypeName))
+                {
+                    Logger.Info($"Using custom property type '{propTypeName}' for {unitDeclaration.Name}.{propDeclaration.Name}");
+                    return propTypeName;
+                }
 
                 isObjectType = true;
-                Logger.Warn($"Could not find type for property: {unitDeclaration.Name}.{propDeclaration.Name}");
+                Logger.Warn($"Could not find type for unit property: {unitDeclaration.Name}.{propDeclaration.Name}");
                 string fallbackName = nameof(SiiUnit);
                 cachedUnitTypeNames.Add(propDeclaration, fallbackName);
                 return fallbackName;

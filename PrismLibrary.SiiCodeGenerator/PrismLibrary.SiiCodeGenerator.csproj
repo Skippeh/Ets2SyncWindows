@@ -14,8 +14,16 @@
       <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.7.0" />
       <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.7.0" />
       <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="3.7.0" />
+      <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
       <PackageReference Include="NLog" Version="4.7.3" />
       <PackageReference Include="NLog.Extensions.Logging" Version="1.6.4" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="PropertyDeclarations.json" />
+      <Content Include="PropertyTypes.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
 </Project>
