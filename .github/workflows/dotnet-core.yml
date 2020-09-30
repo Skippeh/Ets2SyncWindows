@@ -1,4 +1,4 @@
-name: .NET Core
+name: .NET Core Build
 
 on:
   push:
@@ -23,3 +23,13 @@ jobs:
       run: dotnet publish Ets2SyncWindows/Ets2SyncWindows.csproj -o publish/self-contained/ -f netcoreapp3.1 -r win-x64 -c Release --self-contained
     - name: Build net core dependant single executable
       run: dotnet publish Ets2SyncWindows/Ets2SyncWindows.csproj -o publish/core/ -f netcoreapp3.1 -r win-x64 -c Release --no-self-contained -p:PublishSingleFile=true
+    - name: Upload self contained artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: Ets2SyncWindows-selfcontained
+        path: publish/self-contained/
+    - name: Upload net core artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: Ets2SyncWindows-netcore
+        path: publish/core/
