@@ -20,6 +20,6 @@ jobs:
     - name: Install dependencies
       run: dotnet restore
     - name: Build self contained
-      run: dotnet publish Ets2SyncWindows/Ets2SyncWindows.csproj -o publish/self-contained/ -f netcoreapp3.1 -r win-x64 -c Release --self-contained -p:PublishSingleFile=true
-    - name: Build net core dependant
+      run: dotnet publish Ets2SyncWindows/Ets2SyncWindows.csproj -o publish/self-contained/ -f netcoreapp3.1 -r win-x64 -c Release --self-contained
+    - name: Build net core dependant single executable
       run: dotnet publish Ets2SyncWindows/Ets2SyncWindows.csproj -o publish/core/ -f netcoreapp3.1 -r win-x64 -c Release --no-self-contained -p:PublishSingleFile=true
